@@ -76,6 +76,66 @@ pub mod fns {
             Ok(())
         }
 
+        /// **STAKING FLOW OF OSMOSIS**
+        /// When staking LP/GAMM tokens, there are 2 options: lock and superfluid delegate or lock tokens.
+        /// for some pools, superfluid delegate is not available, so we need to use lock tokens.
+        ///
+        /// ## *non-superfluid pools*
+        /// In the case of *non-superfluid pools*, the flow will be as follows:
+        /// -- first time locking tokens --
+        /// 1. lock tokens: *MsgLockTokens*
+        ///     parameters:
+        ///     * duration
+        ///     * owner
+        ///     * coins
+        ///
+        /// -- subsequent staking --
+        /// 2nd time lock-> lock tokens: *MsgLockTokens*
+        ///    parameters: same
+        ///
+        /// -- unstaking --
+        /// 1. unlock tokens: *MsgBeginUnlockPeriodLock*
+        ///    parameters:
+        ///   * lock_id
+        ///   * owner
+        ///   * coins  
+        ///
+        /// ## *superfluid pools*
+        /// In the case of superfluid pools, the flow will be as follows:
+        /// -- first time locking tokens --
+        /// 1st time lock -> lock tokens: *MsgLockAndSuperfluidDelegate*
+        ///    parameters:
+        ///     * sender
+        ///     * coins
+        ///     * val_addr
+        ///     
+        /// -- subsequent staking --
+        /// 2nd time lock -> lock tokens: *MsgLockTokens*
+        ///   parameters:
+        ///     * duration
+        ///     * owner
+        ///     * coins
+        ///
+        /// -- unstaking (v15) --
+        /// -> unlock tokens: *MsgSuperfluidUndelegateAndUnbondLock* (v15)
+        ///   parameters:
+        ///    * lock_id
+        ///    * owner
+        ///    * coins
+        ///
+        /// -- unstaking (v14) --
+        /// -> unlock tokens (two Steps)
+        ///     1). *MsgSuperfluidUndelegate*
+        ///     parameters:
+        ///     * lock_id
+        ///     * sender
+        ///
+        ///    2). *MsgSuperFluidUnbondLock*
+        ///   parameters:
+        ///   * lock_id
+        ///   * owner
+        ///
+        ///
         fn stake(
             &self,
             deps: Deps,
@@ -123,7 +183,6 @@ pub mod fns {
             amount: cosmwasm_std::Uint128,
             unbonding_period: Option<cw_utils::Duration>,
         ) -> Result<Vec<cosmwasm_std::CosmosMsg>, StakingError> {
-            let proxy_addr = Addr::unchecked("osmo1v9w0j3x7q5yqy0y3q3x6y2z7xqz3zq5q9zq3zq");
             let coin = OsmoCoin {
                 // NOTE: This shold be the gamm token address ??
                 denom: self.pool_addr.as_ref().unwrap().to_string(),
