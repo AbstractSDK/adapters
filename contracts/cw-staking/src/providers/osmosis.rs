@@ -109,7 +109,7 @@ pub mod fns {
                     seconds: FORTEEN_DAYS,
                     nanos: 0,
                 }),
-                owner: proxy_addr.to_string(),
+                owner: self.local_proxy_addr.as_ref().unwrap().to_string(),
                 coins: vec![coin],
             }
             .into();
@@ -131,7 +131,7 @@ pub mod fns {
             };
             // Note this should be the osmo address of the sender
             let msg: CosmosMsg = MsgSuperfluidUndelegateAndUnbondLock {
-                sender: proxy_addr.to_string(),
+                sender: self.local_proxy_addr.as_ref().unwrap().to_string(),
                 lock_id: self.sf_lock_id.unwrap(),
                 coin: Some(coin),
             }
@@ -169,7 +169,7 @@ pub mod fns {
                 staking_token: AssetInfoBase::Cw20(Addr::unchecked(
                     self.pool_addr.as_ref().unwrap().to_string(),
                 )),
-                staking_contract_address: self.pool_addr.as_ref.unwrap(),
+                staking_contract_address: self.pool_addr.clone().unwrap(),
                 unbonding_periods: Some(vec![]),
                 max_claims: None,
             };
