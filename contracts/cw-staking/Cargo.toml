@@ -22,8 +22,12 @@ required-features = ["boot"]
 crate-type = ["cdylib", "rlib"]
 
 [features]
-export = []
+
 default = ["all", "export"]
+
+# osmosis = ["dep:osmosis-std"]
+export = []
+default = ["osmosis", "export"]
 boot = ["dep:boot-core", "dep:abstract-boot"]
 juno = [
   "dep:wasmswap",
@@ -33,7 +37,7 @@ juno = [
   "dep:wyndex-stake",
   "dep:cw-controllers",
 ]
-# osmosis = ["dep:osmosis-std"]
+osmosis = ["dep:osmosis-std"]
 terra = ["dep:astroport"]
 all = ["juno", "terra", "boot"]
 
@@ -70,7 +74,8 @@ wyndex-stake = { git = "https://github.com/cosmorama/wynddex.git", rev = "v1.1.2
 dao-cw-utils = { version = "0.13.4", package = "cw-utils" }
 
 # Osmosis #
-osmosis-std = { version = "0.12.0", optional = true }
+# osmosis-std = { version = "0.12.0", optional = true }
+osmosis-std = { git = "https://github.com/osmosis-labs/osmosis-rust.git", optional = true }
 
 # Terra #
 
@@ -85,10 +90,10 @@ dotenv = "0.15.0"
 env_logger = "0.10.0"
 log = "0.4.14"
 speculoos = { workspace = true }
-boot-core = { workspace = true , features = ["daemon"] }
+boot-core = { workspace = true, features = ["daemon"] }
 abstract-boot = { workspace = true }
 clap = { workspace = true }
-cw-staking = { path = "." , features = ["boot"]}
+cw-staking = { path = ".", features = ["boot"] }
 abstract-sdk = { workspace = true, features = ["test-utils"] }
 abstract-testing = { workspace = true }
-wyndex-bundle = { git = "https://github.com/Abstract-OS/integration-bundles.git"}
+wyndex-bundle = { git = "https://github.com/Abstract-OS/integration-bundles.git" }

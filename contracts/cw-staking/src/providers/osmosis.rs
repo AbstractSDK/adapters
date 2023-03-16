@@ -7,6 +7,10 @@ pub const OSMOSIS: &str = "osmosis";
 #[derive(Default)]
 pub struct Osmosis {
     pub local_proxy_addr: Option<Addr>,
+    pub pool_id: Option<u64>,
+    pub pool_addr: Option<Addr>,
+    pub sf_lock_id: Option<u64>,
+    pub validator_addr: Option<Addr>,
 }
 
 impl Identify for Osmosis {
@@ -16,7 +20,7 @@ impl Identify for Osmosis {
 }
 #[cfg(feature = "osmosis")]
 pub mod fns {
-    use crate::CwStakingAdapter;
+    use crate::{error::StakingError, msg::StakingInfoResponse, CwStakingAdapter};
 
     use super::*;
     const FORTEEN_DAYS: i64 = 60 * 60 * 24 * 14;
@@ -24,16 +28,19 @@ pub mod fns {
     use abstract_sdk::Resolve;
     use cosmwasm_std::Env;
     use osmosis_std::{
-        shim::Duration,
+        shim::Duration as OsmosisDuration,
         types::osmosis::gamm::v1beta1::{
-            MsgExitPool, MsgJoinPool, MsgSwapExactAmountIn, QuerySwapExactAmountInRequest,
-            SwapAmountInRoute,
+            MsgJoinPool, MsgSwapExactAmountIn, QuerySwapExactAmountInRequest,
         },
+        types::osmosis::{
+            gamm::v1beta1::QueryPoolResponse,
+            superfluid::{MsgLockAndSuperfluidDelegate, MsgSuperfluidUndelegateAndUnbondLock},
+        },
+        types::{cosmos::base::query, osmosis::lockup::MsgLockTokens},
         types::{
             cosmos::base::v1beta1::Coin as OsmoCoin,
             osmosis::gamm::v1beta1::{Pool, QueryPoolRequest},
         },
-        types::{osmosis::lockup::MsgBeginUnlocking, osmosis::lockup::MsgLockTokens},
     };
 
     /// Osmosis app-chain dex implementation
@@ -88,12 +95,21 @@ pub mod fns {
                 amount: amount.to_string(),
             };
 
+            // let msg: CosmosMsg = MsgLockAndSuperfluidDelegate {
+            //     sender: proxy_addr.to_string(),
+            //     coins: vec![coin],
+            //     val_addr: self.validator_addr.as_ref().unwrap().to_string(),
+            // }
+            // .into();
+            //
+            // From my understanding the lock and superfluid delegate is the same as the lock tokens,
+            // but when i use osmosis frontend it uses the lock tokens.
             let msg: CosmosMsg = MsgLockTokens {
-                duration: Some(Duration {
+                duration: Some(OsmosisDuration {
                     seconds: FORTEEN_DAYS,
                     nanos: 0,
                 }),
-                owner: self.local_proxy_addr.as_ref().unwrap().to_string(),
+                owner: proxy_addr.to_string(),
                 coins: vec![coin],
             }
             .into();
@@ -104,23 +120,85 @@ pub mod fns {
         fn unstake(
             &self,
             deps: Deps,
-            staking_address: Addr,
-            amount: Asset,
-        ) -> Result<Vec<CosmosMsg>, StakingError> {
-            let gamm_id = 1; // TODO: Resolve the right gamm id and add it here
-
-            let msg: CosmosMsg = MsgBeginUnlocking {
-                owner: self.local_proxy_addr.as_ref().unwrap().to_string(),
-                coins: vec![OsmoCoin::try_from(amount).unwrap()], // see docs: "Unlocking all if unset"
-                id: gamm_id,
+            amount: cosmwasm_std::Uint128,
+            unbonding_period: Option<cw_utils::Duration>,
+        ) -> Result<Vec<cosmwasm_std::CosmosMsg>, StakingError> {
+            let proxy_addr = Addr::unchecked("osmo1v9w0j3x7q5yqy0y3q3x6y2z7xqz3zq5q9zq3zq");
+            let coin = OsmoCoin {
+                // NOTE: This shold be the gamm token address ??
+                denom: self.pool_addr.as_ref().unwrap().to_string(),
+                amount: amount.to_string(),
+            };
+            // Note this should be the osmo address of the sender
+            let msg: CosmosMsg = MsgSuperfluidUndelegateAndUnbondLock {
+                sender: proxy_addr.to_string(),
+                lock_id: self.sf_lock_id.unwrap(),
+                coin: Some(coin),
             }
             .into();
 
             Ok(vec![msg])
         }
 
-        fn claim(&self, deps: Deps, staking_address: Addr) -> Result<Vec<CosmosMsg>, StakingError> {
-            unimplemented!()
+        fn claim(&self, deps: Deps) -> Result<Vec<cosmwasm_std::CosmosMsg>, StakingError> {
+            // Check: Im not sure if this is correct
+            // Claim is not nesseccary for osmosis
+            Ok(vec![])
+        }
+
+        // fn query_pool_data(
+        //     &self,
+        //     querier: &cosmwasm_std::QuerierWrapper,
+        //     pool_id: u64,
+        // ) -> StdResult<Pool> {
+        //     let res = QueryPoolRequest { pool_id }.query(&querier).unwrap();
+
+        //     let pool = Pool::try_from(res.pool.unwrap()).unwrap();
+        //     Ok(pool)
+        // }
+
+        fn query_info(
+            &self,
+            querier: &cosmwasm_std::QuerierWrapper,
+        ) -> crate::contract::CwStakingResult<crate::msg::StakingInfoResponse> {
+            let pool = self
+                .query_pool_data(querier, self.pool_id.unwrap())
+                .unwrap();
+
+            let res = StakingInfoResponse {
+                staking_token: AssetInfoBase::Cw20(Addr::unchecked(
+                    self.pool_addr.as_ref().unwrap().to_string(),
+                )),
+                staking_contract_address: self.pool_addr.as_ref.unwrap(),
+                unbonding_periods: Some(vec![]),
+                max_claims: None,
+            };
+
+            Ok(res)
+        }
+
+        fn query_staked(
+            &self,
+            querier: &cosmwasm_std::QuerierWrapper,
+            staker: Addr,
+            unbonding_period: Option<cw_utils::Duration>,
+        ) -> crate::contract::CwStakingResult<crate::msg::StakeResponse> {
+            todo!()
+        }
+
+        fn query_unbonding(
+            &self,
+            querier: &cosmwasm_std::QuerierWrapper,
+            staker: Addr,
+        ) -> crate::contract::CwStakingResult<crate::msg::UnbondingResponse> {
+            todo!()
+        }
+
+        fn query_reward_tokens(
+            &self,
+            querier: &cosmwasm_std::QuerierWrapper,
+        ) -> crate::contract::CwStakingResult<crate::msg::RewardTokensResponse> {
+            todo!()
         }
 
         fn claim_rewards(&self, deps: Deps) -> Result<Vec<cosmwasm_std::CosmosMsg>, StakingError> {
