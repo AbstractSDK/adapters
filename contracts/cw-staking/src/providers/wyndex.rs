@@ -18,6 +18,7 @@ use cw_utils::Duration;
 use wyndex_stake::{
     msg::{
         BondingInfoResponse, ExecuteMsg as StakeCw20ExecuteMsg, ReceiveDelegationMsg as ReceiveMsg,
+        StakedResponse,
     },
     state::{BondingInfo, STAKE},
 };
@@ -123,6 +124,18 @@ impl CwStakingAdapter for WynDex {
         })])
     }
 
+    fn claim_rewards(&self, _deps: Deps) -> Result<Vec<CosmosMsg>, StakingError> {
+        let msg = StakeCw20ExecuteMsg::WithdrawRewards {
+            owner: None,
+            receiver: None,
+        };
+        Ok(vec![CosmosMsg::Wasm(WasmMsg::Execute {
+            contract_addr: self.staking_contract_address.to_string(),
+            msg: to_binary(&msg)?,
+            funds: vec![],
+        })])
+    }
+
     fn query_info(&self, querier: &QuerierWrapper) -> CwStakingResult<StakingInfoResponse> {
         let bonding_info_resp: BondingInfoResponse = querier.query_wasm_smart(
             self.staking_contract_address.clone(),
@@ -156,27 +169,18 @@ impl CwStakingAdapter for WynDex {
     ) -> CwStakingResult<StakeResponse> {
         let unbonding_period = unwrap_unbond(self, unbonding_period)
             .map_err(|e| StdError::generic_err(e.to_string()))?;
-        // Raw query because the smart-query returns staked + currently unbonding tokens, which is not what we want.
-        // we want the actual staked token balance.
-        let stake_balance_res: Result<Option<BondingInfo>, _> = STAKE.query(
-            querier,
-            self.staking_contract_address.clone(),
-            (&staker, unbonding_period),
-        );
-        let stake_balance_info = stake_balance_res.map_err(|e| {
-            StdError::generic_err(format!(
-                "Raw query for wynddex stake balance failed. Error: {e:?}"
-            ))
-        })?;
 
-        let amount = if let Some(bonding_info) = stake_balance_info {
-            bonding_info.total_stake()
-                - bonding_info.total_locked(self.env.as_ref().unwrap())
-                - bonding_info.total_unlocked(self.env.as_ref().unwrap())
-        } else {
-            Uint128::zero()
-        };
-        Ok(StakeResponse { amount })
+        let staked_response: StakedResponse = querier.query_wasm_smart(
+            self.staking_contract_address.clone(),
+            &wyndex_stake::msg::QueryMsg::Staked {
+                address: staker.to_string(),
+                unbonding_period: unbonding_period,
+            },
+        )?;
+
+        Ok(StakeResponse {
+            amount: staked_response.stake,
+        })
     }
 
     fn query_unbonding(
