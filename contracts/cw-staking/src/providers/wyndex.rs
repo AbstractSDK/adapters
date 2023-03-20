@@ -15,7 +15,7 @@ use cosmwasm_std::{
 use cw20::Cw20ExecuteMsg;
 use cw_asset::{AssetInfo, AssetInfoBase};
 use cw_utils::Duration;
-use wyndex_stake::msg::StakedResponse;
+use wyndex_stake::msg::{DistributionDataResponse, StakedResponse};
 use wyndex_stake::{
     msg::{
         BondingInfoResponse, ExecuteMsg as StakeCw20ExecuteMsg, ReceiveDelegationMsg as ReceiveMsg,
@@ -221,15 +221,23 @@ impl CwStakingAdapter for WynDex {
         &self,
         querier: &QuerierWrapper,
     ) -> CwStakingResult<RewardTokensResponse> {
-        // hardcode as wynd token for now.
-        let token = AssetEntry::new(WYND_TOKEN).resolve(
-            querier,
-            &AnsHost {
-                address: self.ans_host.clone(),
-            },
+        let resp: DistributionDataResponse = querier.query_wasm_smart(
+            self.staking_contract_address.clone(),
+            &wyndex_stake::msg::QueryMsg::DistributionData {},
         )?;
+        let reward_tokens = resp
+            .distributions
+            .into_iter()
+            .map(|(asset, _)| {
+                let token = match asset {
+                    wyndex::asset::AssetInfoValidated::Native(denom) => AssetInfo::Native(denom),
+                    wyndex::asset::AssetInfoValidated::Token(token) => AssetInfo::Cw20(token),
+                };
+                Result::<_, StakingError>::Ok(token)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
         Ok(RewardTokensResponse {
-            tokens: vec![token],
+            tokens: reward_tokens,
         })
     }
 }
