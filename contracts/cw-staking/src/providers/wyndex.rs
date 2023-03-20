@@ -18,7 +18,6 @@ use cw_utils::Duration;
 use wyndex_stake::{
     msg::{
         BondingInfoResponse, ExecuteMsg as StakeCw20ExecuteMsg, ReceiveDelegationMsg as ReceiveMsg,
-        StakedResponse,
     },
     state::{BondingInfo, STAKE},
 };
