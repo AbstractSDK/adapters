@@ -26,7 +26,7 @@ use wyndex_stake::{
 pub const WYNDEX: &str = "wyndex";
 
 pub const WYND_TOKEN: &str = "juno>wynd";
-// Source https://github.com/wasmswap/wasmswap-contracts
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct WynDex {
     lp_token: LpToken,
@@ -142,11 +142,6 @@ impl CwStakingAdapter for WynDex {
             &wyndex_stake::msg::QueryMsg::BondingInfo {},
         )?;
 
-        let _distibution_info_resp: BondingInfoResponse = querier.query_wasm_smart(
-            self.staking_contract_address.clone(),
-            &wyndex_stake::msg::QueryMsg::BondingInfo {},
-        )?;
-
         Ok(StakingInfoResponse {
             staking_contract_address: self.staking_contract_address.clone(),
             staking_token: AssetInfo::Cw20(self.lp_token_address.clone()),
@@ -170,17 +165,25 @@ impl CwStakingAdapter for WynDex {
         let unbonding_period = unwrap_unbond(self, unbonding_period)
             .map_err(|e| StdError::generic_err(e.to_string()))?;
 
-        let staked_response: StakedResponse = querier.query_wasm_smart(
+        // Raw query because the smart-query returns staked + currently unbonding tokens, which is not what we want.
+        // we want the actual staked token balance.
+        let stake_balance_res: Result<Option<BondingInfo>, _> = STAKE.query(
+            querier,
             self.staking_contract_address.clone(),
-            &wyndex_stake::msg::QueryMsg::Staked {
-                address: staker.to_string(),
-                unbonding_period: unbonding_period,
-            },
-        )?;
+            (&staker, unbonding_period),
+        );
+        let stake_balance_info = stake_balance_res.map_err(|e| {
+            StdError::generic_err(format!(
+                "Raw query for wynddex stake balance failed. Error: {e:?}"
+            ))
+        })?;
 
-        Ok(StakeResponse {
-            amount: staked_response.stake,
-        })
+        let amount = if let Some(bonding_info) = stake_balance_info {
+            bonding_info.total_stake()
+        } else {
+            Uint128::zero()
+        };
+        Ok(StakeResponse { amount })
     }
 
     fn query_unbonding(
