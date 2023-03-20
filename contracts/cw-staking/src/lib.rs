@@ -71,8 +71,7 @@ pub mod boot {
                         staking_token: stake_asset,
                         unbonding_period: duration,
                     },
-                }
-                .into(),
+                },
             });
             manager.execute_on_module(CW_STAKING, stake_msg)?;
             Ok(())
@@ -93,8 +92,7 @@ pub mod boot {
                         staking_token: stake_asset,
                         unbonding_period: duration,
                     },
-                }
-                .into(),
+                },
             });
             manager.execute_on_module(CW_STAKING, stake_msg)?;
             Ok(())
