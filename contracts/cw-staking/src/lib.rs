@@ -21,7 +21,7 @@ pub mod boot {
     use crate::msg::{CwStakingAction, CwStakingExecuteMsg, ExecuteMsg, InstantiateMsg, QueryMsg};
     use crate::CW_STAKING;
     use abstract_boot::{AbstractBootError, ApiDeployer, Manager};
-    use abstract_os::objects::{AnsAsset, AssetEntry};
+    use abstract_os::objects::AnsAsset;
     use abstract_os::{api, MANAGER};
     use boot_core::ContractWrapper;
     use boot_core::{boot_contract, ContractInstance};

@@ -168,15 +168,21 @@ impl CwStakingAdapter for WynDex {
         let amount = if let Some(bonding_info) = stake_balance_info {
             // panic!("Stake balance query returned None. This should never happen.Stake balance query returned None. This should never happen.");
             eprintln!("bonding_info: {:?}", bonding_info);
-            eprintln!("bonding_info.total_stake(): {:?}", bonding_info.total_stake());
-            eprintln!("total_locked: {:?}", bonding_info.total_locked(self.env.as_ref().unwrap()));
+            eprintln!(
+                "bonding_info.total_stake(): {:?}",
+                bonding_info.total_stake()
+            );
+            eprintln!(
+                "total_locked: {:?}",
+                bonding_info.total_locked(self.env.as_ref().unwrap())
+            );
             eprintln!(
                 "total_unlocked: {:?}",
                 bonding_info.total_unlocked(self.env.as_ref().unwrap())
             );
             bonding_info.total_stake()
-                // - bonding_info.total_locked(self.env.as_ref().unwrap())
-                // - bonding_info.total_unlocked(self.env.as_ref().unwrap())
+            // - bonding_info.total_locked(self.env.as_ref().unwrap())
+            // - bonding_info.total_unlocked(self.env.as_ref().unwrap())
         } else {
             let res: StakedResponse = querier.query_wasm_smart(
                 self.staking_contract_address.clone(),
