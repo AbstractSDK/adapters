@@ -1,8 +1,6 @@
 use cosmwasm_std::Addr;
 use cw_utils::Duration;
-use osmosis_std::{
-    shim::Duration as OsmosisDuration, types::osmosis::superfluid::SuperfluidAssetType,
-};
+use osmosis_std::shim::Duration as OsmosisDuration;
 
 use crate::{error::StakingError, traits::identify::Identify};
 
@@ -33,24 +31,20 @@ pub mod fns {
     const FORTEEN_DAYS: i64 = 60 * 60 * 24 * 14;
     use cosmwasm_std::{CosmosMsg, Deps, Querier, StdError, StdResult, Timestamp, Uint256};
     use cosmwasm_std::{Decimal, Decimal256, Env, Uint128};
-    use cw_asset::{Asset, AssetInfoBase};
+    use cw_asset::{Asset, AssetInfo, AssetInfoBase};
     use cw_utils::{Duration, Expiration};
     use osmosis_std::types::osmosis::lockup::{
-        AccountLockedLongerDurationDenomRequest, AccountUnlockingCoinsRequest, PeriodLock,
+        AccountLockedLongerDurationDenomRequest, PeriodLock,
+    };
+    use osmosis_std::types::osmosis::poolincentives::v1beta1::{
+        QueryExternalIncentiveGaugesRequest, QueryIncentivizedPoolsRequest,
     };
     use osmosis_std::types::osmosis::superfluid::AssetTypeRequest;
     use osmosis_std::{
         shim::Duration as OsmosisDuration,
-        types::osmosis::gamm::v1beta1::{
-            MsgJoinPool, MsgSwapExactAmountIn, QuerySwapExactAmountInRequest,
-        },
-        types::osmosis::{
-            gamm::v1beta1::QueryPoolResponse,
-            superfluid::{MsgLockAndSuperfluidDelegate, MsgSuperfluidUndelegateAndUnbondLock},
-        },
-        types::{
-            cosmos::base::query,
-            osmosis::lockup::{MsgBeginUnlocking, MsgLockTokens},
+        types::osmosis::lockup::{MsgBeginUnlocking, MsgLockTokens},
+        types::osmosis::superfluid::{
+            MsgLockAndSuperfluidDelegate, MsgSuperfluidUndelegateAndUnbondLock,
         },
         types::{
             cosmos::base::v1beta1::Coin as OsmoCoin,
@@ -60,14 +54,10 @@ pub mod fns {
 
     /// Osmosis app-chain dex implementation
     impl CwStakingAdapter for Osmosis {
-        /// Fetching data for osmosis staking involves:
-        /// 1. Fetch the pool address from ANS (has pool id)
-        /// 2. Fetch the lock_id from osmosis (can be done with pool address, address and duration)
-        /// 3.
         fn fetch_data(
             &mut self,
             deps: cosmwasm_std::Deps,
-            env: Env,
+            _env: Env,
             ans_host: &abstract_sdk::feature_objects::AnsHost,
             staking_asset: abstract_core::objects::AssetEntry,
         ) -> abstract_sdk::AbstractSdkResult<()> {
@@ -202,7 +192,6 @@ pub mod fns {
             Ok(vec![msg])
         }
 
-        // TODO: workout edgecase of not superfluid staking pools
         fn unstake(
             &self,
             deps: Deps,
@@ -247,31 +236,26 @@ pub mod fns {
             Ok(vec![])
         }
 
-        // fn query_pool_data(
-        //     &self,
-        //     querier: &cosmwasm_std::QuerierWrapper,
-        //     pool_id: u64,
-        // ) -> StdResult<Pool> {
-        //     let res = QueryPoolRequest { pool_id }.query(&querier).unwrap();
-
-        //     let pool = Pool::try_from(res.pool.unwrap()).unwrap();
-        //     Ok(pool)
-        // }
-
         fn query_info(
             &self,
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> crate::contract::CwStakingResult<crate::msg::StakingInfoResponse> {
-            let pool = self
-                .query_pool_data(querier, self.pool_id.unwrap())
-                .unwrap();
+            // NOTE: This seems to only return the longest duration atm
+            let lockable_durations = QueryIncentivizedPoolsRequest {}
+                .query(querier)
+                .unwrap()
+                .incentivized_pools
+                .into_iter()
+                .filter(|p| p.pool_id == self.pool_id.unwrap())
+                .map(|d| Duration::Time(d.lockable_duration.unwrap().seconds as u64))
+                .collect::<Vec<_>>();
 
             let res = StakingInfoResponse {
                 staking_token: AssetInfoBase::Cw20(Addr::unchecked(
                     self.pool_denom.as_ref().unwrap().to_string(),
                 )),
                 staking_contract_address: Addr::unchecked(self.pool_denom.as_ref().unwrap()),
-                unbonding_periods: Some(vec![]),
+                unbonding_periods: Some(lockable_durations),
                 max_claims: None,
             };
 
@@ -287,6 +271,7 @@ pub mod fns {
             let duration = unwrap_unbond(self, unbonding_period)?;
             let lock = self.query_lock(duration, &staker, querier)?;
 
+            // Assume that the lock is for only one denom
             let amount = match lock {
                 Some(lock) => lock.coins.iter().fold(Uint128::zero(), |acc, coin| {
                     acc + coin.amount.parse::<Uint128>().unwrap()
@@ -302,7 +287,9 @@ pub mod fns {
             querier: &cosmwasm_std::QuerierWrapper,
             staker: Addr,
         ) -> crate::contract::CwStakingResult<crate::msg::UnbondingResponse> {
-            // NOTE: THIS IS NOT CORRECT -> We dont have unbonding period here, so we have to return the sum of all locks
+            // NOTE: THIS IS NOT CORRECT -> We dont have unbonding period available in this func here,
+            // so we have to return the sum of all locks
+            // Possible solution: take the unbonding period from the lock in fetch_data()
             let unbonding = unwrap_unbond(self, Some(Duration::Time(0)))?;
 
             let locks = self.query_locks(unbonding, &staker, querier)?;
@@ -325,7 +312,32 @@ pub mod fns {
             &self,
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> crate::contract::CwStakingResult<crate::msg::RewardTokensResponse> {
-            todo!()
+            // NOTE: This query is super inefficient but i dont know how to do it better
+            let external_reward_gauges = QueryExternalIncentiveGaugesRequest {}
+                .query(querier)
+                .unwrap()
+                .data
+                .into_iter()
+                .filter(|gauge| {
+                    gauge
+                        .distribute_to
+                        .as_ref()
+                        .unwrap()
+                        .denom
+                        .eq(self.pool_denom.as_ref().unwrap())
+                })
+                .collect::<Vec<_>>();
+
+            let reward_tokens = external_reward_gauges
+                .into_iter()
+                .map(|g| g.coins)
+                .flatten()
+                .map(|coin| AssetInfo::Native(coin.denom))
+                .collect::<Vec<AssetInfo>>();
+
+            Ok(crate::msg::RewardTokensResponse {
+                tokens: reward_tokens,
+            })
         }
 
     impl Osmosis {
@@ -335,78 +347,12 @@ pub mod fns {
             owner: &Addr,
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> Result<Option<u64>, StakingError> {
-            // This query returns all the locks that are equal or longer than the duration
-            // there is no query that returns the lock with the exact duration AND
-            // osmosis docs do not specify the order if there are multiple locks
-            // so we have to sort based on duration and take the first, which should be the one that equals the duration
             let lock = self.query_lock(duration, owner, querier)?;
 
             match lock {
                 Some(lock) => Ok(Some(lock.id)),
                 None => Ok(None),
             }
-        }
-
-        fn compute_osmo_share_out_amount(
-            pool_assets: &[OsmoCoin],
-            deposits: &[Uint128; 2],
-            total_share: Uint128,
-        ) -> StdResult<Uint128> {
-            // ~ source: terraswap contract ~
-            // min(1, 2)
-            // 1. sqrt(deposit_0 * exchange_rate_0_to_1 * deposit_0) * (total_share / sqrt(pool_0 * pool_1))
-            // == deposit_0 * total_share / pool_0
-            // 2. sqrt(deposit_1 * exchange_rate_1_to_0 * deposit_1) * (total_share / sqrt(pool_1 * pool_1))
-            // == deposit_1 * total_share / pool_1
-            let share_amount_out = std::cmp::min(
-                deposits[0].multiply_ratio(
-                    total_share,
-                    pool_assets[0].amount.parse::<Uint128>().unwrap(),
-                ),
-                deposits[1].multiply_ratio(
-                    total_share,
-                    pool_assets[1].amount.parse::<Uint128>().unwrap(),
-                ),
-            );
-
-            Ok(share_amount_out)
-        }
-
-        fn assert_slippage_tolerance(
-            slippage_tolerance: &Option<Decimal>,
-            deposits: &[Uint128; 2],
-            pool_assets: &[OsmoCoin],
-        ) -> Result<(), StakingError> {
-            if let Some(slippage_tolerance) = *slippage_tolerance {
-                let slippage_tolerance: Decimal256 = slippage_tolerance.into();
-                if slippage_tolerance > Decimal256::one() {
-                    return Err(StakingError::Std(StdError::generic_err(
-                        "slippage_tolerance cannot bigger than 1",
-                    )));
-                }
-
-                let one_minus_slippage_tolerance = Decimal256::one() - slippage_tolerance;
-                let deposits: [Uint256; 2] = [deposits[0].into(), deposits[1].into()];
-                let pools: [Uint256; 2] = [
-                    pool_assets[0].amount.parse::<Uint256>().unwrap(),
-                    pool_assets[1].amount.parse::<Uint256>().unwrap(),
-                ];
-
-                // Ensure each prices are not dropped as much as slippage tolerance rate
-                if Decimal256::from_ratio(deposits[0], deposits[1]) * one_minus_slippage_tolerance
-                    > Decimal256::from_ratio(pools[0], pools[1])
-                    || Decimal256::from_ratio(deposits[1], deposits[0])
-                        * one_minus_slippage_tolerance
-                        > Decimal256::from_ratio(pools[1], pools[0])
-                {
-                    return Err(StakingError::MaxSlippageAssertion(
-                        slippage_tolerance.to_string(),
-                        OSMOSIS.to_owned(),
-                    ));
-                }
-            }
-
-            Ok(())
         }
 
         fn query_pool_data(
@@ -441,7 +387,6 @@ pub mod fns {
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> StdResult<Option<PeriodLock>> {
             let locks = self.query_locks(duration, staker, querier)?;
-
             Ok(locks.first().cloned())
         }
 
@@ -451,6 +396,10 @@ pub mod fns {
             staker: &Addr,
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> Result<Vec<PeriodLock>, StdError> {
+            // This query returns all the locks that are equal or longer than the duration
+            // there is no query that returns the lock with the exact duration AND
+            // osmosis docs do not specify the order if there are multiple locks
+            // so we have to sort based on duration and take the first, which should be the one that equals the duration
             let mut locks = AccountLockedLongerDurationDenomRequest {
                 duration: Some(duration),
                 denom: self.pool_denom.as_ref().unwrap().to_string(),
@@ -458,6 +407,7 @@ pub mod fns {
             }
             .query(&querier)?
             .locks;
+
             locks.sort_by(|a, b| {
                 a.duration
                     .as_ref()
