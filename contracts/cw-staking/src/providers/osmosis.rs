@@ -89,8 +89,6 @@ pub mod fns {
             self.pool_denom = Some(gamm_pool_address.to_string());
             self.pool_id = Some(gamm_pool_id);
 
-            // superfluid asset type 0 is for non-superfluid pools and 1 is for superfluid pools
-            // see docs: https://github.com/osmosis-labs/osmosis/tree/main/x/superfluid#assettype
             self.is_superfluid =
                 Some(self.query_is_superfluid(&deps.querier, self.pool_denom.clone().unwrap())?);
 
@@ -341,13 +339,14 @@ pub mod fns {
         }
 
     impl Osmosis {
+        /// queries the lock_id for the given duration and account(staker)
         fn query_lock_id(
             &self,
             duration: OsmosisDuration,
-            owner: &Addr,
+            staker: &Addr,
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> Result<Option<u64>, StakingError> {
-            let lock = self.query_lock(duration, owner, querier)?;
+            let lock = self.query_lock(duration, staker, querier)?;
 
             match lock {
                 Some(lock) => Ok(Some(lock.id)),
@@ -355,17 +354,9 @@ pub mod fns {
             }
         }
 
-        fn query_pool_data(
-            &self,
-            querier: &cosmwasm_std::QuerierWrapper,
-            pool_id: u64,
-        ) -> StdResult<Pool> {
-            let res = QueryPoolRequest { pool_id }.query(&querier).unwrap();
-
-            let pool = Pool::try_from(res.pool.unwrap()).unwrap();
-            Ok(pool)
-        }
-
+        /// queries weahter the given denom is a superfluid asset or not
+        /// superfluid asset type 0 is for non-superfluid pools and 1 is for superfluid pools
+        /// see docs: https://github.com/osmosis-labs/osmosis/tree/main/x/superfluid#assettype
         fn query_is_superfluid(
             &self,
             querier: &cosmwasm_std::QuerierWrapper,
@@ -380,6 +371,7 @@ pub mod fns {
             }
         }
 
+        /// Query the lock with the exact duration.
         fn query_lock(
             &self,
             duration: OsmosisDuration,
@@ -390,6 +382,8 @@ pub mod fns {
             Ok(locks.first().cloned())
         }
 
+        /// Query all the locks that are equal or longer than the duration and
+        /// they are sorted ascending by duration.
         fn query_locks(
             &self,
             duration: OsmosisDuration,
@@ -416,6 +410,18 @@ pub mod fns {
                     .cmp(&b.duration.as_ref().unwrap().seconds)
             });
             Ok(locks)
+        }
+
+        /// queries the pool data for the given pool id
+        fn query_pool_data(
+            &self,
+            querier: &cosmwasm_std::QuerierWrapper,
+            pool_id: u64,
+        ) -> StdResult<Pool> {
+            let res = QueryPoolRequest { pool_id }.query(&querier).unwrap();
+
+            let pool = Pool::try_from(res.pool.unwrap()).unwrap();
+            Ok(pool)
         }
     }
 }
