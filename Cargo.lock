@@ -5,7 +5,7 @@ version = 3
 [[package]]
 name = "abstract-account-factory"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
@@ -45,7 +45,7 @@ dependencies = [
 [[package]]
 name = "abstract-ans-host"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
@@ -63,7 +63,7 @@ dependencies = [
 [[package]]
 name = "abstract-api"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-sdk 0.13.0",
@@ -110,7 +110,7 @@ dependencies = [
 [[package]]
 name = "abstract-boot"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-account-factory",
  "abstract-ans-host 0.13.0",
@@ -139,7 +139,7 @@ dependencies = [
 [[package]]
 name = "abstract-core"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-ica 0.13.0",
  "boot-core",
@@ -175,7 +175,7 @@ dependencies = [
 [[package]]
 name = "abstract-ica"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -198,7 +198,7 @@ dependencies = [
 [[package]]
 name = "abstract-macros"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -231,7 +231,7 @@ dependencies = [
 [[package]]
 name = "abstract-manager"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
@@ -273,7 +273,7 @@ dependencies = [
 [[package]]
 name = "abstract-module-factory"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
@@ -360,7 +360,7 @@ dependencies = [
 [[package]]
 name = "abstract-proxy"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
@@ -401,7 +401,7 @@ dependencies = [
 [[package]]
 name = "abstract-sdk"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
@@ -422,7 +422,7 @@ dependencies = [
 [[package]]
 name = "abstract-testing"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "cosmwasm-schema",
@@ -458,7 +458,7 @@ dependencies = [
 [[package]]
 name = "abstract-version-control"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git#57b76a9ea58e2944e37b2b5b0cac48ae0295cc9e"
+source = "git+https://github.com/Abstract-OS/contracts.git#e51ba52200e56430b7562801c8cbb632646f993d"
 dependencies = [
  "abstract-core",
  "abstract-macros 0.13.0",
