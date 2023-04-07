@@ -25,9 +25,7 @@ crate-type = ["cdylib", "rlib"]
 
 default = ["all", "export"]
 
-# osmosis = ["dep:osmosis-std"]
 export = []
-default = ["osmosis", "export"]
 boot = ["dep:boot-core", "dep:abstract-boot"]
 juno = [
   "dep:wasmswap",
@@ -39,7 +37,7 @@ juno = [
 ]
 osmosis = ["dep:osmosis-std"]
 terra = ["dep:astroport"]
-all = ["juno", "terra", "boot"]
+all = ["juno", "terra", "boot", "osmosis"]
 
 
 [dependencies]

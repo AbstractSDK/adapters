@@ -65,7 +65,7 @@ pub mod fns {
             // This is going to be the gamm pool id
             let gamm_pool_id = gamm_pool_address
                 .to_string()
-                .split("/")
+                .split('/')
                 .last()
                 .unwrap()
                 .parse::<u64>()
@@ -86,6 +86,7 @@ pub mod fns {
                 Some(self.query_is_superfluid(&deps.querier, self.pool_denom.clone().unwrap())?);
 
             Ok(())
+        }
         /// In the case of *non-superfluid pools*, the flow will be as follows:
         /// -- first time locking tokens --
         /// 1. lock tokens: *MsgLockTokens*
@@ -219,9 +220,13 @@ pub mod fns {
             Ok(vec![msg])
         }
 
+        fn claim_rewards(&self, _deps: Deps) -> Result<Vec<cosmwasm_std::CosmosMsg>, StakingError> {
+            // REWARDS ARE CLAIMED AUTOMATICALLY
+            Ok(vec![])
+        }
+
         fn claim(&self, _deps: Deps) -> Result<Vec<cosmwasm_std::CosmosMsg>, StakingError> {
-            // Check: Im not sure if this is correct
-            // Claim is not nesseccary for osmosis
+            // UNBONDING TOKENS ARE CLAIMED AUTOMATICALLY
             Ok(vec![])
         }
 
@@ -262,13 +267,13 @@ pub mod fns {
             let duration = unwrap_unbond(self, unbonding_period)?;
             let lock = self.query_lock(querier, duration, &staker, Some(false))?;
             if let Some(lock) = lock {
-                return Ok(crate::msg::StakeResponse {
+                Ok(crate::msg::StakeResponse {
                     amount: lock.coins.first().unwrap().amount.parse().unwrap(),
-                });
+                })
             } else {
-                return Ok(crate::msg::StakeResponse {
+                Ok(crate::msg::StakeResponse {
                     amount: Uint128::zero(),
-                });
+                })
             }
         }
 
@@ -321,6 +326,7 @@ pub mod fns {
                 tokens: reward_tokens,
             })
         }
+    }
 
     impl Osmosis {
         /// queries the lock_id for the given duration and account(staker)
