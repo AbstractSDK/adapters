@@ -41,6 +41,7 @@ pub mod fns {
     use osmosis_std::{
         shim::Duration as OsmosisDuration,
         types::cosmos::base::v1beta1::Coin as OsmoCoin,
+        types::osmosis::incentives::ActiveGaugesPerDenomRequest,
         types::osmosis::lockup::{MsgBeginUnlocking, MsgLockTokens},
         types::osmosis::superfluid::{
             MsgLockAndSuperfluidDelegate, MsgSuperfluidUndelegateAndUnbondLock,
@@ -299,28 +300,31 @@ pub mod fns {
             Ok(response)
         }
 
-        // FIXME: This is the only query we dont have a clear answer for yet
         fn query_reward_tokens(
             &self,
             querier: &cosmwasm_std::QuerierWrapper,
         ) -> crate::contract::CwStakingResult<crate::msg::RewardTokensResponse> {
             // NOTE: This query is super inefficient but i dont know how to do it better
-            let reward_tokens = QueryExternalIncentiveGaugesRequest {}
-                .query(querier)
-                .unwrap()
-                .data
-                .into_iter()
-                .filter(|gauge| {
-                    gauge
-                        .distribute_to
-                        .as_ref()
-                        .unwrap()
-                        .denom
-                        .eq(self.pool_denom.as_ref().unwrap())
-                })
-                .flat_map(|g| g.coins)
-                .map(|coin| AssetInfo::Native(coin.denom))
-                .collect::<Vec<_>>();
+            let reward_tokens = ActiveGaugesPerDenomRequest {
+                denom: self.pool_denom.as_ref().unwrap().to_string(),
+                pagination: None,
+            }
+            .query(querier)
+            .unwrap()
+            .data
+            .into_iter()
+            .filter(|gauge| {
+                if gauge.is_perpetual {
+                    return true;
+                } else if gauge.num_epochs_paid_over > gauge.filled_epochs {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+            .flat_map(|g| g.coins)
+            .map(|coin| AssetInfo::Native(coin.denom))
+            .collect::<Vec<_>>();
 
             Ok(crate::msg::RewardTokensResponse {
                 tokens: reward_tokens,
