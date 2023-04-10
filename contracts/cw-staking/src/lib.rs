@@ -20,12 +20,12 @@ pub mod host_staking {
 pub mod boot {
     use crate::msg::{CwStakingAction, CwStakingExecuteMsg, ExecuteMsg, InstantiateMsg, QueryMsg};
     use crate::CW_STAKING;
+    use abstract_boot::boot_core::ContractWrapper;
+    use abstract_boot::boot_core::{contract, ContractInstance};
+    use abstract_boot::boot_core::{Contract, CwEnv, IndexResponse, TxResponse};
     use abstract_boot::{AbstractBootError, ApiDeployer, Manager};
     use abstract_core::objects::AnsAsset;
     use abstract_core::{api, MANAGER};
-    use abstract_boot::boot_core::ContractWrapper;
-    use abstract_boot::boot_core::{contract, ContractInstance};
-    use abstract_boot::boot_core::{CwEnv, Contract, IndexResponse, TxResponse};
     use cosmwasm_std::{Addr, Empty};
 
     /// Contract wrapper for interacting with BOOT

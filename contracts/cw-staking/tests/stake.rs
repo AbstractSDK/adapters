@@ -1,11 +1,6 @@
+use abstract_boot::boot_core::{instantiate_default_mock_env, CallAs, ContractInstance, Deploy};
 use abstract_boot::{Abstract, ApiDeployer};
 use abstract_core::objects::{AnsAsset, AssetEntry};
-use abstract_boot::boot_core::{
-    ContractInstance,
-    instantiate_default_mock_env,
-    Deploy,
-    CallAs
-};
 
 use boot_cw_plus::Cw20ExecuteMsgFns;
 use cosmwasm_std::{Addr, Empty};
@@ -13,8 +8,8 @@ use speculoos::*;
 use wyndex_bundle::{EUR_USD_LP, WYNDEX, WYNDEX_OWNER};
 
 use common::create_default_os;
-use cw_staking::{boot::CwStakingApi, msg::CwStakingQueryMsgFns};
 use cw_staking::CW_STAKING;
+use cw_staking::{boot::CwStakingApi, msg::CwStakingQueryMsgFns};
 
 mod common;
 

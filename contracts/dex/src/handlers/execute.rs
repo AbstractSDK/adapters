@@ -42,7 +42,8 @@ pub fn execute_handler(
             recipient_os_id,
         } => {
             // only previous OS can change the owner
-            api.account_registry(deps.as_ref()).assert_proxy(&info.sender)?;
+            api.account_registry(deps.as_ref())
+                .assert_proxy(&info.sender)?;
             if let Some(swap_fee) = swap_fee {
                 let mut fee = SWAP_FEE.load(deps.storage)?;
                 fee.set_share(swap_fee)?;

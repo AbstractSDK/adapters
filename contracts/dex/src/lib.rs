@@ -22,14 +22,14 @@ pub mod host_exchange {
 #[cfg(feature = "boot")]
 pub mod boot {
     use crate::{msg::*, EXCHANGE};
+    use abstract_boot::boot_core::ContractWrapper;
+    use abstract_boot::boot_core::{contract, Contract, ContractInstance, CwEnv};
     use abstract_boot::{AbstractBootError, ApiDeployer, Manager};
     use abstract_core::{
         api::{self},
         objects::{AnsAsset, AssetEntry},
         MANAGER,
     };
-    use abstract_boot::boot_core::ContractWrapper;
-    use abstract_boot::boot_core::{contract, CwEnv, Contract, ContractInstance};
     use cosmwasm_std::{Decimal, Empty};
 
     #[contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
