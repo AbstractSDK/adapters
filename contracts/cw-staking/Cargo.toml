@@ -91,4 +91,5 @@ clap = { workspace = true }
 cw-staking = { path = "." , features = ["boot"]}
 abstract-sdk = { workspace = true, features = ["test-utils"] }
 abstract-testing = { workspace = true }
-wyndex-bundle = { git = "https://github.com/Abstract-OS/integration-bundles.git"}
+wyndex-bundle = { git = "https://github.com/Abstract-OS/integration-bundles.git", branch = "update/0.13.2" }
+boot-cw-plus = { workspace = true }

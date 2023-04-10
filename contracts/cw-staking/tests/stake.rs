@@ -1,16 +1,22 @@
-mod common;
-
 use abstract_boot::{Abstract, ApiDeployer};
 use abstract_core::objects::{AnsAsset, AssetEntry};
-use boot_core::{instantiate_default_mock_env, ContractInstance};
-use boot_core::{CallAs, Deploy};
-use common::create_default_os;
-use cosmwasm_std::{Addr, Empty};
-use cw_staking::CW_STAKING;
-use cw_staking::{boot::CwStakingApi, msg::CwStakingQueryMsgFns};
+use abstract_boot::boot_core::{
+    ContractInstance,
+    instantiate_default_mock_env,
+    Deploy,
+    CallAs
+};
 
+use boot_cw_plus::Cw20ExecuteMsgFns;
+use cosmwasm_std::{Addr, Empty};
 use speculoos::*;
 use wyndex_bundle::{EUR_USD_LP, WYNDEX, WYNDEX_OWNER};
+
+use common::create_default_os;
+use cw_staking::{boot::CwStakingApi, msg::CwStakingQueryMsgFns};
+use cw_staking::CW_STAKING;
+
+mod common;
 
 #[test]
 fn stake_lp() -> anyhow::Result<()> {
@@ -18,7 +24,7 @@ fn stake_lp() -> anyhow::Result<()> {
     let (_state, chain) = instantiate_default_mock_env(&sender)?;
 
     let deployment = Abstract::deploy_on(chain.clone(), "1.0.0".parse()?)?;
-    let wyndex = wyndex_bundle::WynDex::deploy_on(chain.clone(), Empty {})?;
+    let wyndex = wyndex_bundle::WynDex::store_on(chain.clone())?;
 
     let _root_os = create_default_os(&deployment.account_factory)?;
     let mut staking_api = CwStakingApi::new(CW_STAKING, chain.clone());
@@ -33,7 +39,7 @@ fn stake_lp() -> anyhow::Result<()> {
     wyndex
         .eur_usd_lp
         .call_as(&Addr::unchecked(WYNDEX_OWNER))
-        .transfer(1000, proxy_addr.to_string())?;
+        .transfer(1000u128.into(), proxy_addr.to_string())?;
 
     // install exchange on AbstractAccount
     os.manager.install_module(CW_STAKING, &Empty {})?;

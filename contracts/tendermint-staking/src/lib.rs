@@ -9,18 +9,18 @@ pub const TENDERMINT_STAKING: &str = "abstract:tendermint-staking";
 pub mod boot {
     use abstract_boot::ApiDeployer;
     use abstract_core::api::InstantiateMsg;
-    use boot_core::ContractWrapper;
-    use boot_core::{boot_contract, BootEnvironment, Contract};
+    use abstract_boot::boot_core::ContractWrapper;
+    use abstract_boot::boot_core::{contract, CwEnv, Contract};
     use cosmwasm_std::Empty;
 
     use crate::msg::*;
 
-    #[boot_contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
+    #[contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
     pub struct TMintStakingApi<Chain>;
 
-    impl<Chain: BootEnvironment> ApiDeployer<Chain, Empty> for TMintStakingApi<Chain> {}
+    impl<Chain: CwEnv> ApiDeployer<Chain, Empty> for TMintStakingApi<Chain> {}
 
-    impl<Chain: BootEnvironment> TMintStakingApi<Chain> {
+    impl<Chain: CwEnv> TMintStakingApi<Chain> {
         pub fn new(name: &str, chain: Chain) -> Self {
             Self(
                 Contract::new(name, chain)

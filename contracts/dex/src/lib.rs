@@ -28,17 +28,17 @@ pub mod boot {
         objects::{AnsAsset, AssetEntry},
         MANAGER,
     };
-    use boot_core::ContractWrapper;
-    use boot_core::{boot_contract, BootEnvironment, Contract, ContractInstance};
+    use abstract_boot::boot_core::ContractWrapper;
+    use abstract_boot::boot_core::{contract, CwEnv, Contract, ContractInstance};
     use cosmwasm_std::{Decimal, Empty};
 
-    #[boot_contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
+    #[contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
     pub struct DexApi<Chain>;
 
     // Implement deployer trait
-    impl<Chain: BootEnvironment> ApiDeployer<Chain, DexInstantiateMsg> for DexApi<Chain> {}
+    impl<Chain: CwEnv> ApiDeployer<Chain, DexInstantiateMsg> for DexApi<Chain> {}
 
-    impl<Chain: BootEnvironment> DexApi<Chain> {
+    impl<Chain: CwEnv> DexApi<Chain> {
         pub fn new(name: &str, chain: Chain) -> Self {
             Self(
                 Contract::new(name, chain)
