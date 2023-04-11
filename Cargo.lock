@@ -212,6 +212,82 @@ dependencies = [
 ]
 
 [[package]]
+name = "abstract-cw-staking-api"
+version = "0.11.0"
+dependencies = [
+ "abstract-api",
+ "abstract-boot 0.13.0",
+ "abstract-core 0.13.0",
+ "abstract-cw-staking-api",
+ "abstract-sdk 0.13.0",
+ "abstract-testing",
+ "anyhow",
+ "astroport 2.0.0 (git+https://github.com/astroport-fi/astroport-core.git?rev=126d43216111df786472fe2a845c1e2fadfe4a36)",
+ "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "boot-cw-plus 0.10.0 (git+https://github.com/Abstract-OS/BOOT.git?tag=v0.10.0)",
+ "clap",
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-asset",
+ "cw-controllers 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cw-utils 0.13.4",
+ "cw-utils 1.0.1",
+ "cw20 0.10.3",
+ "cw20 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cw20-stake",
+ "dotenv",
+ "env_logger",
+ "log",
+ "osmosis-std 0.12.0",
+ "schemars",
+ "semver",
+ "serde",
+ "speculoos",
+ "thiserror",
+ "tokio",
+ "wasmswap 1.1.2-beta",
+ "wyndex",
+ "wyndex-bundle",
+ "wyndex-stake",
+]
+
+[[package]]
+name = "abstract-dex-api"
+version = "0.11.0"
+dependencies = [
+ "abstract-api",
+ "abstract-boot 0.13.0",
+ "abstract-core 0.13.0",
+ "abstract-dex-api",
+ "abstract-sdk 0.13.0",
+ "abstract-testing",
+ "anyhow",
+ "astroport 2.0.0 (git+https://github.com/astroport-fi/astroport-core.git?rev=7bedc6f27e59ef8b921a0980be9bc30c4aab7459)",
+ "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "boot-cw-plus 0.10.0 (git+https://github.com/Abstract-OS/BOOT.git?tag=v0.10.0)",
+ "clap",
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-asset",
+ "cw-storage-plus 1.0.1",
+ "cw20 0.10.3",
+ "cw20 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dotenv",
+ "env_logger",
+ "osmosis-std 0.13.2",
+ "schemars",
+ "semver",
+ "serde",
+ "speculoos",
+ "terraswap",
+ "thiserror",
+ "tokio",
+ "wasmswap 1.2.0",
+ "wyndex",
+ "wyndex-bundle",
+]
+
+[[package]]
 name = "abstract-ica"
 version = "0.13.0"
 source = "git+https://github.com/Abstract-OS/contracts.git#bb4a72c754ed2a881822b6b5e5a12fc6b270258a"
@@ -422,6 +498,20 @@ dependencies = [
  "schemars",
  "semver",
  "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "abstract-tendermint-staking-api"
+version = "0.11.0"
+dependencies = [
+ "abstract-api",
+ "abstract-boot 0.13.0",
+ "abstract-core 0.13.0",
+ "abstract-sdk 0.13.0",
+ "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cosmwasm-schema",
+ "cosmwasm-std",
  "thiserror",
 ]
 
@@ -1380,46 +1470,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cw-staking"
-version = "0.11.0"
-dependencies = [
- "abstract-api",
- "abstract-boot 0.13.0",
- "abstract-core 0.13.0",
- "abstract-sdk 0.13.0",
- "abstract-testing",
- "anyhow",
- "astroport 2.0.0 (git+https://github.com/astroport-fi/astroport-core.git?rev=126d43216111df786472fe2a845c1e2fadfe4a36)",
- "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "boot-cw-plus 0.10.0 (git+https://github.com/Abstract-OS/BOOT.git?tag=v0.10.0)",
- "clap",
- "cosmwasm-schema",
- "cosmwasm-std",
- "cw-asset",
- "cw-controllers 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "cw-staking",
- "cw-utils 0.13.4",
- "cw-utils 1.0.1",
- "cw20 0.10.3",
- "cw20 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "cw20-stake",
- "dotenv",
- "env_logger",
- "log",
- "osmosis-std 0.12.0",
- "schemars",
- "semver",
- "serde",
- "speculoos",
- "thiserror",
- "tokio",
- "wasmswap 1.1.2-beta",
- "wyndex",
- "wyndex-bundle",
- "wyndex-stake",
-]
-
-[[package]]
 name = "cw-storage-plus"
 version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2009,42 +2059,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "dex"
-version = "0.11.0"
-dependencies = [
- "abstract-api",
- "abstract-boot 0.13.0",
- "abstract-core 0.13.0",
- "abstract-sdk 0.13.0",
- "abstract-testing",
- "anyhow",
- "astroport 2.0.0 (git+https://github.com/astroport-fi/astroport-core.git?rev=7bedc6f27e59ef8b921a0980be9bc30c4aab7459)",
- "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "boot-cw-plus 0.10.0 (git+https://github.com/Abstract-OS/BOOT.git?tag=v0.10.0)",
- "clap",
- "cosmwasm-schema",
- "cosmwasm-std",
- "cw-asset",
- "cw-storage-plus 1.0.1",
- "cw20 0.10.3",
- "cw20 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "dex",
- "dotenv",
- "env_logger",
- "osmosis-std 0.13.2",
- "schemars",
- "semver",
- "serde",
- "speculoos",
- "terraswap",
- "thiserror",
- "tokio",
- "wasmswap 1.2.0",
- "wyndex",
- "wyndex-bundle",
 ]
 
 [[package]]
@@ -4291,20 +4305,6 @@ dependencies = [
  "url",
  "uuid",
  "walkdir",
-]
-
-[[package]]
-name = "tendermint-staking"
-version = "0.11.0"
-dependencies = [
- "abstract-api",
- "abstract-boot 0.13.0",
- "abstract-core 0.13.0",
- "abstract-sdk 0.13.0",
- "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "cosmwasm-schema",
- "cosmwasm-std",
- "thiserror",
 ]
 
 [[package]]
