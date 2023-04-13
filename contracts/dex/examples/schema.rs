@@ -1,6 +1,6 @@
-use cosmwasm_schema::{export_schema_with_title, remove_schemas, schema_for};
 use abstract_dex_api::contract::DexApi;
 use abstract_dex_api::msg::SimulateSwapResponse;
+use cosmwasm_schema::{export_schema_with_title, remove_schemas, schema_for};
 use std::env::current_dir;
 use std::fs::create_dir_all;
 
