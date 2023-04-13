@@ -7,12 +7,38 @@ use abstract_boot::boot_core::Deploy;
 use abstract_boot::boot_core::{ContractInstance};
 use abstract_boot::{Abstract, ApiDeployer};
 use abstract_dex_api::{boot::DexApi, msg::DexInstantiateMsg, EXCHANGE};
-use boot_core::networks::LOCAL_OSMO;
 use boot_core::DaemonOptionsBuilder;
+use boot_core::networks::{NetworkInfo, NetworkKind};
+use boot_core::networks::osmosis::OSMO_CHAIN;
 use cosmwasm_std::{coin, Addr, Decimal, Empty};
 
 const MNEMONIC: &str = "quality vacuum heart guard buzz spike sight swarm shove special gym robust assume sudden deposit grid alcohol choice devote leader tilt noodle tide penalty";
 
+const STATE_FILE: &str = "/tmp/boot_test.json";
+pub const LOCAL_OSMO: NetworkInfo = NetworkInfo {
+    kind: NetworkKind::Local,
+    id: "localosmosis",
+    gas_denom: "uosmo",
+    gas_price: 0.0026,
+    grpc_urls: &["http://localhost:9090"],
+    chain_info: OSMO_CHAIN,
+    lcd_url: None,
+    fcd_url: None,
+};
+
+/// We use Osmosis's make file to spin up a local testnet to test against
+/// steps to reproduce: 
+/// clone osmosis repo:
+/// ```bash 
+/// git clone https://github.com/osmosis-labs/osmosis.git
+/// cd osmosis
+/// make install
+/// make localnet-start-with-state
+/// ```
+/// now the initial pools should be set up. From then on you should be able to run
+/// ```bash
+/// make localnet-start
+/// ```
 #[test]
 fn swap_native() -> anyhow::Result<()> {
     let rt = Arc::new(tokio::runtime::Runtime::new().unwrap());
@@ -20,6 +46,11 @@ fn swap_native() -> anyhow::Result<()> {
         .network(LOCAL_OSMO)
         .build()?;
     env::set_var("LOCAL_MNEMONIC", MNEMONIC);
+    if env::var("STATE_FILE").is_err() {
+        env::set_var("STATE_FILE", STATE_FILE);
+    }
+
+    env::set_var("ARTIFACTS_DIR", "X");
 
     let (sender, chain) = boot_core::instantiate_daemon_env(&rt, options)?;
     let wallet = chain.sender.clone();
