@@ -29,7 +29,7 @@ pub fn query_handler(deps: Deps, env: Env, api: &DexApi, msg: DexQueryMsg) -> De
                 return Err(DexError::IbcMsgQuery);
             }
 
-            let exchange = exchange_resolver::resolve_exchange(&dex)?;
+            let exchange = exchange_resolver::resolve_exchange(&dex, None)?;
             let (messages, _) = api.resolve_dex_action(deps, action, exchange)?;
             to_binary(&GenerateMessagesResponse { messages }).map_err(Into::into)
         }
@@ -44,7 +44,8 @@ pub fn simulate_swap(
     mut ask_asset: AssetEntry,
     dex: String,
 ) -> DexResult<Binary> {
-    let exchange = resolve_exchange(&dex).map_err(|e| StdError::generic_err(e.to_string()))?;
+    let exchange =
+        resolve_exchange(&dex, None).map_err(|e| StdError::generic_err(e.to_string()))?;
     let ans = api.name_service(deps);
     let fee = SWAP_FEE.load(deps.storage)?;
 

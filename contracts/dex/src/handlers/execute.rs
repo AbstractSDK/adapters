@@ -73,7 +73,8 @@ fn handle_local_api_request(
     action: DexAction,
     exchange: String,
 ) -> DexResult {
-    let exchange = exchange_resolver::resolve_exchange(&exchange)?;
+    // construct local exchange
+    let exchange = exchange_resolver::resolve_exchange(&exchange, Some(api.target()?))?;
     let (msgs, _) = api.resolve_dex_action(deps.as_ref(), action, exchange)?;
     let proxy_msg = api.executor(deps.as_ref()).execute(msgs)?;
     Ok(Response::new().add_message(proxy_msg))

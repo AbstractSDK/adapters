@@ -28,7 +28,7 @@ pub trait LocalDex: AbstractNameService + Execution {
         &self,
         deps: Deps,
         action: DexAction,
-        exchange: &dyn DEX,
+        exchange: Box<dyn DEX>,
     ) -> Result<(Vec<CosmosMsg>, ReplyId), DexError> {
         Ok(match action {
             DexAction::ProvideLiquidity { assets, max_spread } => {
@@ -102,7 +102,7 @@ pub trait LocalDex: AbstractNameService + Execution {
         deps: Deps,
         offer_asset: OfferAsset,
         mut ask_asset: AssetEntry,
-        exchange: &dyn DEX,
+        exchange: Box<dyn DEX>,
         max_spread: Option<Decimal>,
         belief_price: Option<Decimal>,
     ) -> Result<Vec<CosmosMsg>, DexError> {
@@ -145,7 +145,7 @@ pub trait LocalDex: AbstractNameService + Execution {
         _deps: Deps,
         _offer_assets: Vec<OfferAsset>,
         _ask_assets: Vec<AskAsset>,
-        _exchange: &dyn DEX,
+        _exchange: Box<dyn DEX>,
         _max_spread: Option<Decimal>,
         _router: Option<SwapRouter>,
     ) -> Result<Vec<CosmosMsg>, DexError> {
@@ -177,7 +177,7 @@ pub trait LocalDex: AbstractNameService + Execution {
         &self,
         deps: Deps,
         offer_assets: Vec<OfferAsset>,
-        exchange: &dyn DEX,
+        exchange: Box<dyn DEX>,
         max_spread: Option<Decimal>,
     ) -> Result<Vec<CosmosMsg>, DexError> {
         let ans = self.name_service(deps);
@@ -202,7 +202,7 @@ pub trait LocalDex: AbstractNameService + Execution {
         deps: Deps,
         offer_asset: OfferAsset,
         mut paired_assets: Vec<AssetEntry>,
-        exchange: &dyn DEX,
+        exchange: Box<dyn DEX>,
     ) -> Result<Vec<CosmosMsg>, DexError> {
         let ans = self.name_service(deps);
         let paired_asset_infos = ans.query(&paired_assets)?;
@@ -220,7 +220,7 @@ pub trait LocalDex: AbstractNameService + Execution {
         &self,
         deps: Deps,
         lp_token: OfferAsset,
-        exchange: &dyn DEX,
+        exchange: Box<dyn DEX>,
     ) -> Result<Vec<CosmosMsg>, DexError> {
         let ans = self.name_service(deps);
 
