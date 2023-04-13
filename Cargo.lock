@@ -5,7 +5,7 @@ version = 3
 [[package]]
 name = "abstract-account-factory"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",
@@ -49,7 +49,7 @@ dependencies = [
 [[package]]
 name = "abstract-ans-host"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",
@@ -88,7 +88,7 @@ dependencies = [
 [[package]]
 name = "abstract-api"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-sdk 0.13.0",
@@ -105,7 +105,7 @@ dependencies = [
 [[package]]
 name = "abstract-boot"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-account-factory 0.13.0",
  "abstract-ans-host 0.13.0",
@@ -164,7 +164,7 @@ dependencies = [
 [[package]]
 name = "abstract-core"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-ica 0.13.0",
  "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -291,7 +291,7 @@ dependencies = [
 [[package]]
 name = "abstract-ica"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -316,7 +316,7 @@ dependencies = [
 [[package]]
 name = "abstract-macros"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -337,7 +337,7 @@ dependencies = [
 [[package]]
 name = "abstract-manager"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",
@@ -382,7 +382,7 @@ dependencies = [
 [[package]]
 name = "abstract-module-factory"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",
@@ -421,7 +421,7 @@ dependencies = [
 [[package]]
 name = "abstract-proxy"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",
@@ -464,7 +464,7 @@ dependencies = [
 [[package]]
 name = "abstract-sdk"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",
@@ -519,7 +519,7 @@ dependencies = [
 [[package]]
 name = "abstract-testing"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "cosmwasm-schema",
@@ -537,7 +537,7 @@ dependencies = [
 [[package]]
 name = "abstract-version-control"
 version = "0.13.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#91836ed88581e8d5b8382f803f33f5861f0aa475"
+source = "git+https://github.com/Abstract-OS/contracts.git?branch=add/network_names#08f54d707c602042eb442a423e3ed507f36c132a"
 dependencies = [
  "abstract-core 0.13.0",
  "abstract-macros 0.13.0",

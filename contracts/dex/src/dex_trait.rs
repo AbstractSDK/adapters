@@ -25,7 +25,7 @@ pub trait Identify {
             prefix_list
                 .iter()
                 .any(|prefix| chain_id.starts_with(prefix))
-        })
+        }) || chain_id == "cosmos-testnet-14002"
     }
 }
 

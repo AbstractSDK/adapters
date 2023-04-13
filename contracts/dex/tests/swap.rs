@@ -3,9 +3,9 @@ mod common;
 use abstract_boot::boot_core::Deploy;
 use abstract_boot::boot_core::{instantiate_default_mock_env, ContractInstance};
 use abstract_boot::{Abstract, AbstractAccount, ApiDeployer};
+use abstract_dex_api::{boot::DexApi, msg::DexInstantiateMsg, EXCHANGE};
 use common::create_default_os;
 use cosmwasm_std::{coin, Addr, Decimal, Empty};
-use dex::{boot::DexApi, msg::DexInstantiateMsg, EXCHANGE};
 
 use speculoos::*;
 use wyndex_bundle::{EUR, USD};
@@ -25,7 +25,7 @@ fn swap_native() -> anyhow::Result<()> {
         "1.0.0".parse()?,
         DexInstantiateMsg {
             swap_fee: Decimal::percent(1),
-            recipient_os: 0,
+            recipient_account: 0,
         },
     )?;
 

@@ -2,10 +2,10 @@ use abstract_boot::ApiDeployer;
 
 use abstract_boot::boot_core::networks::{parse_network, NetworkInfo};
 use abstract_boot::boot_core::*;
+use abstract_dex_api::boot::DexApi;
+use abstract_dex_api::msg::DexInstantiateMsg;
+use abstract_dex_api::EXCHANGE;
 use cosmwasm_std::Decimal;
-use dex::boot::DexApi;
-use dex::msg::DexInstantiateMsg;
-use dex::EXCHANGE;
 use semver::Version;
 use std::sync::Arc;
 use tokio::runtime::Runtime;
@@ -22,7 +22,7 @@ fn deploy_dex(network: NetworkInfo) -> anyhow::Result<()> {
         version,
         DexInstantiateMsg {
             swap_fee: Decimal::percent(1),
-            recipient_os: 0,
+            recipient_account: 0,
         },
     )?;
     Ok(())
