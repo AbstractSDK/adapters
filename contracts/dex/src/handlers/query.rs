@@ -33,7 +33,7 @@ pub fn query_handler(deps: Deps, env: Env, api: &DexApi, msg: DexQueryMsg) -> De
                     let (messages, _) = api.resolve_dex_action(deps, action, exchange)?;
                     to_binary(&GenerateMessagesResponse { messages }).map_err(Into::into)
                 }
-                _ => {}
+                _ => Err(DexError::InvalidGenerateMessage {}),
             }
         }
     }
