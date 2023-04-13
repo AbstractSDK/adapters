@@ -2,7 +2,7 @@
 // It cannot be in abstract-os because it does not have a dependency on sdk (as it shouldn't)
 use crate::{
     msg::{
-        AskAsset, DexAction, DexApiExecuteMsg, DexExecuteMsg, DexName, DexQueryMsg, OfferAsset,
+        AskAsset, DexAction, DexExecuteMsg, DexName, DexQueryMsg, OfferAsset,
         SimulateSwapResponse, SwapRouter,
     },
     EXCHANGE,
@@ -61,10 +61,10 @@ impl<'a, T: DexInterface> Dex<'a, T> {
 
         modules.request(
             self.dex_module_id(),
-            DexApiExecuteMsg::from(DexExecuteMsg {
+            DexExecuteMsg::Action {
                 dex: self.dex_name(),
                 action,
-            }),
+            },
         )
     }
 
