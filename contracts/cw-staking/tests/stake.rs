@@ -8,8 +8,8 @@ use speculoos::*;
 use wyndex_bundle::{EUR_USD_LP, WYNDEX, WYNDEX_OWNER};
 
 use common::create_default_os;
-use cw_staking::CW_STAKING;
-use cw_staking::{boot::CwStakingApi, msg::CwStakingQueryMsgFns};
+use abstract_cw_staking_api::CW_STAKING;
+use abstract_cw_staking_api::{boot::CwStakingApi, msg::CwStakingQueryMsgFns};
 
 mod common;
 
