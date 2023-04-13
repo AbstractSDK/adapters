@@ -2,7 +2,7 @@ use crate::error::DexError;
 use abstract_core::objects::{DexAssetPairing, PoolAddress, PoolReference};
 use abstract_sdk::core::objects::AssetEntry;
 use abstract_sdk::feature_objects::AnsHost;
-use cosmwasm_std::{CosmosMsg, Decimal, Deps, Uint128, Env};
+use cosmwasm_std::{CosmosMsg, Decimal, Deps, Env, Uint128};
 use cw_asset::{Asset, AssetInfo};
 
 pub type Return = Uint128;
@@ -18,11 +18,13 @@ pub trait Identify {
     /// Returns the network names that this dex supports.
     fn supported_chains(&self) -> &[&[ChainName]];
     /// Returns true if the DEX is deployed on the local chain.
-    fn is_deployed_locally(&self,env: &Env) -> bool{
+    fn is_deployed_locally(&self, env: &Env) -> bool {
         let chain_id = &env.block.chain_id;
         // Check if the chain id starts with any of the supported prefixes
         self.supported_chains().iter().any(|prefix_list| {
-            prefix_list.iter().any(|prefix| chain_id.starts_with(prefix))
+            prefix_list
+                .iter()
+                .any(|prefix| chain_id.starts_with(prefix))
         })
     }
 }

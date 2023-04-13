@@ -47,7 +47,7 @@ impl Default for Astroport {
 // - LP token address, based on provided LP token
 // - Generator address = staking_address
 impl Identify for Astroport {
-    fn name(&self) -> ProviderName{
+    fn name(&self) -> ProviderName {
         ASTROPORT
     }
 }

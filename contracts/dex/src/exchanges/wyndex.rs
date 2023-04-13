@@ -1,6 +1,6 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread, ChainName, DexName},
+    dex_trait::{ChainName, DexName, Fee, FeeOnInput, Identify, Return, Spread},
     error::DexError,
     DEX,
 };
@@ -16,7 +16,7 @@ pub const WYNDEX: &str = "wyndex";
 pub struct WynDex {}
 
 impl Identify for WynDex {
-    fn name(&self) -> DexName{
+    fn name(&self) -> DexName {
         WYNDEX
     }
     fn supported_chains(&self) -> &[&[ChainName]] {

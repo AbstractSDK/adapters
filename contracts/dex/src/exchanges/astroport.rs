@@ -1,6 +1,6 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread, DexName},
+    dex_trait::{DexName, Fee, FeeOnInput, Identify, Return, Spread},
     error::DexError,
     DEX,
 };
@@ -16,7 +16,7 @@ pub const ASTROPORT: &str = "astroport";
 pub struct Astroport {}
 
 impl Identify for Astroport {
-    fn name(&self) -> DexName{
+    fn name(&self) -> DexName {
         ASTROPORT
     }
     fn supported_chains(&self) -> &[&[crate::dex_trait::ChainName]] {

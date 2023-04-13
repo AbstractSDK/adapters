@@ -18,7 +18,7 @@ pub struct Osmosis {
 }
 
 impl Identify for Osmosis {
-    fn name(&self) -> ProviderName{
+    fn name(&self) -> ProviderName {
         OSMOSIS
     }
 }
@@ -36,9 +36,7 @@ pub mod fns {
     use cw_asset::{AssetInfo, AssetInfoBase};
     use cw_utils::{Duration, Expiration};
     use osmosis_std::types::osmosis::lockup::{AccountLockedDurationRequest, PeriodLock};
-    use osmosis_std::types::osmosis::poolincentives::v1beta1::{
-        QueryExternalIncentiveGaugesRequest, QueryGaugeIdsRequest,
-    };
+    use osmosis_std::types::osmosis::poolincentives::v1beta1::QueryGaugeIdsRequest;
     use osmosis_std::types::osmosis::superfluid::QueryUnpoolWhitelistRequest;
     use osmosis_std::{
         shim::Duration as OsmosisDuration,
@@ -317,11 +315,9 @@ pub mod fns {
             .into_iter()
             .filter(|gauge| {
                 if gauge.is_perpetual {
-                    return true;
-                } else if gauge.num_epochs_paid_over > gauge.filled_epochs {
-                    return true;
+                    true
                 } else {
-                    return false;
+                    gauge.num_epochs_paid_over > gauge.filled_epochs
                 }
             })
             .flat_map(|g| g.coins)

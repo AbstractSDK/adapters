@@ -1,6 +1,6 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Return, Spread, ChainName, DexName},
+    dex_trait::{ChainName, DexName, Fee, FeeOnInput, Return, Spread},
 };
 use crate::{dex_trait::Identify, error::DexError, DEX};
 use abstract_core::{objects::PoolAddress, JUNO};

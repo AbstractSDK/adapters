@@ -1,6 +1,6 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread, ChainName, DexName},
+    dex_trait::{ChainName, DexName, Fee, FeeOnInput, Identify, Return, Spread},
     error::DexError,
     DEX,
 };
@@ -16,7 +16,7 @@ pub const TERRASWAP: &str = "terraswap";
 pub struct Terraswap {}
 
 impl Identify for Terraswap {
-    fn name(&self) -> DexName{
+    fn name(&self) -> DexName {
         TERRASWAP
     }
     fn supported_chains(&self) -> &[&[ChainName]] {

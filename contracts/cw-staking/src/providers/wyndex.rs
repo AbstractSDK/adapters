@@ -47,7 +47,7 @@ impl Default for WynDex {
 }
 
 impl Identify for WynDex {
-    fn name(&self) -> ProviderName{
+    fn name(&self) -> ProviderName {
         WYNDEX
     }
 }

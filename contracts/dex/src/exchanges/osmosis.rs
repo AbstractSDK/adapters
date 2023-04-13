@@ -1,4 +1,4 @@
-use crate::dex_trait::{Identify, DexName, ChainName};
+use crate::dex_trait::{ChainName, DexName, Identify};
 
 #[cfg(feature = "osmosis")]
 use crate::{
@@ -6,7 +6,7 @@ use crate::{
     error::DexError,
     DEX,
 };
-use cosmwasm_std::{Addr};
+use cosmwasm_std::Addr;
 
 #[cfg(feature = "osmosis")]
 use ::{

@@ -38,7 +38,7 @@ impl Default for JunoSwap {
 }
 
 impl Identify for JunoSwap {
-    fn name(&self) -> ProviderName{
+    fn name(&self) -> ProviderName {
         JUNOSWAP
     }
 }

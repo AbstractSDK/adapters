@@ -10,7 +10,7 @@ use abstract_core::ibc_client::CallbackInfo;
 use abstract_core::objects::ans_host::AnsHost;
 use abstract_core::objects::AnsAsset;
 use abstract_sdk::{features::AbstractNameService, Execution};
-use abstract_sdk::{IbcInterface, Resolve, OsVerification};
+use abstract_sdk::{IbcInterface, OsVerification, Resolve};
 use cosmwasm_std::{to_binary, Coin, Deps, DepsMut, Env, MessageInfo, Response, StdError};
 
 const ACTION_RETRIES: u8 = 3;
@@ -53,7 +53,9 @@ pub fn execute_handler(
 
             if let Some(account_id) = recipient_account {
                 let mut fee = SWAP_FEE.load(deps.storage)?;
-                let recipient = api.account_registry(deps.as_ref()).proxy_address(account_id)?;
+                let recipient = api
+                    .account_registry(deps.as_ref())
+                    .proxy_address(account_id)?;
                 fee.set_recipient(deps.api, recipient)?;
                 SWAP_FEE.save(deps.storage, &fee)?;
             }

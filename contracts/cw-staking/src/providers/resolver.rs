@@ -38,7 +38,7 @@ pub(crate) fn resolve_local_provider(
         #[cfg(feature = "juno")]
         WYNDEX => Ok(Box::<WynDex>::default()),
         #[cfg(feature = "osmosis")]
-        OSMOSIS => Ok(Box::new(Osmosis::default())),
+        OSMOSIS => Ok(Box::<Osmosis>::default()),
         #[cfg(feature = "terra")]
         ASTROPORT => Ok(Box::<Astroport>::default()),
         _ => Err(StakingError::ForeignDex(name.to_owned())),
