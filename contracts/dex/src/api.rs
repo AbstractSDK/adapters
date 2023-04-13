@@ -2,8 +2,8 @@
 // It cannot be in abstract-os because it does not have a dependency on sdk (as it shouldn't)
 use crate::{
     msg::{
-        AskAsset, DexAction, DexExecuteMsg, DexName, DexQueryMsg, OfferAsset,
-        SimulateSwapResponse, SwapRouter,
+        AskAsset, DexAction, DexExecuteMsg, DexName, DexQueryMsg, OfferAsset, SimulateSwapResponse,
+        SwapRouter,
     },
     EXCHANGE,
 };

@@ -38,7 +38,7 @@ pub enum DexExecuteMsg {
     Action {
         dex: DexName,
         action: DexAction,
-    }
+    },
 }
 
 #[cosmwasm_schema::cw_serde]
