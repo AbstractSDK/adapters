@@ -56,6 +56,7 @@ osmosis-std = { version = "0.13.2", optional = true }
 
 [dev-dependencies]
 abstract-boot = { workspace = true, features = ["daemon"] }
+boot-core = { workspace = true, features = ["daemon"] }
 tokio = { workspace = true }
 semver = { workspace = true }
 anyhow = { workspace = true }
