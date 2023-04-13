@@ -1,9 +1,9 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Return, Spread},
+    dex_trait::{Fee, FeeOnInput, Return, Spread, ChainName, DexName},
 };
 use crate::{dex_trait::Identify, error::DexError, DEX};
-use abstract_core::objects::PoolAddress;
+use abstract_core::{objects::PoolAddress, JUNO};
 use abstract_sdk::cw_helpers::cosmwasm_std::wasm_smart_query;
 use cosmwasm_std::{
     to_binary, wasm_execute, Coin, CosmosMsg, Decimal, Deps, Fraction, Uint128, WasmMsg,
@@ -18,11 +18,11 @@ pub const JUNOSWAP: &str = "junoswap";
 pub struct JunoSwap {}
 
 impl Identify for JunoSwap {
-    fn name(&self) -> &'static str {
+    fn name(&self) -> DexName {
         JUNOSWAP
     }
-    fn over_ibc(&self) -> bool {
-        false
+    fn supported_chains(&self) -> &[&[ChainName]] {
+        &[JUNO]
     }
 }
 

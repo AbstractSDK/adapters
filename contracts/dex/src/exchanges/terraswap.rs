@@ -1,10 +1,10 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread},
+    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread, ChainName, DexName},
     error::DexError,
     DEX,
 };
-use abstract_core::objects::PoolAddress;
+use abstract_core::{objects::PoolAddress, TERRA};
 use abstract_sdk::cw_helpers::cosmwasm_std::wasm_smart_query;
 use cosmwasm_std::{to_binary, wasm_execute, CosmosMsg, Decimal, Deps};
 use cw20::Cw20ExecuteMsg;
@@ -16,11 +16,11 @@ pub const TERRASWAP: &str = "terraswap";
 pub struct Terraswap {}
 
 impl Identify for Terraswap {
-    fn over_ibc(&self) -> bool {
-        false
-    }
-    fn name(&self) -> &'static str {
+    fn name(&self) -> DexName{
         TERRASWAP
+    }
+    fn supported_chains(&self) -> &[&[ChainName]] {
+        &[TERRA]
     }
 }
 

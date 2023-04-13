@@ -2,17 +2,29 @@ use crate::error::DexError;
 use abstract_core::objects::{DexAssetPairing, PoolAddress, PoolReference};
 use abstract_sdk::core::objects::AssetEntry;
 use abstract_sdk::feature_objects::AnsHost;
-use cosmwasm_std::{CosmosMsg, Decimal, Deps, Uint128};
+use cosmwasm_std::{CosmosMsg, Decimal, Deps, Uint128, Env};
 use cw_asset::{Asset, AssetInfo};
 
 pub type Return = Uint128;
 pub type Spread = Uint128;
 pub type Fee = Uint128;
 pub type FeeOnInput = bool;
+pub type ChainName = &'static str;
+pub type DexName = &'static str;
 
 pub trait Identify {
-    fn over_ibc(&self) -> bool;
-    fn name(&self) -> &'static str;
+    /// Return the name of the DEX
+    fn name(&self) -> DexName;
+    /// Returns the network names that this dex supports.
+    fn supported_chains(&self) -> &[&[ChainName]];
+    /// Returns true if the DEX is deployed on the local chain.
+    fn is_deployed_locally(&self,env: &Env) -> bool{
+        let chain_id = &env.block.chain_id;
+        // Check if the chain id starts with any of the supported prefixes
+        self.supported_chains().iter().any(|prefix_list| {
+            prefix_list.iter().any(|prefix| chain_id.starts_with(prefix))
+        })
+    }
 }
 
 /// DEX ensures supported dexes support the expected functionality.

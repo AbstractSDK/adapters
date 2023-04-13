@@ -21,6 +21,8 @@ use cw20::Cw20ExecuteMsg;
 use cw_asset::AssetInfo;
 use cw_utils::Duration;
 
+use super::ProviderName;
+
 pub const ASTROPORT: &str = "astroport";
 
 // TODO: use optional values here?
@@ -45,7 +47,7 @@ impl Default for Astroport {
 // - LP token address, based on provided LP token
 // - Generator address = staking_address
 impl Identify for Astroport {
-    fn name(&self) -> &'static str {
+    fn name(&self) -> ProviderName{
         ASTROPORT
     }
 }

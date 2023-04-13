@@ -16,6 +16,8 @@ use cw20_stake::msg::{ExecuteMsg as StakeCw20ExecuteMsg, ReceiveMsg};
 use cw_asset::{AssetInfo, AssetInfoBase};
 use cw_utils::Duration;
 
+use super::ProviderName;
+
 pub const JUNOSWAP: &str = "junoswap";
 // Source https://github.com/wasmswap/wasmswap-contracts
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -36,7 +38,7 @@ impl Default for JunoSwap {
 }
 
 impl Identify for JunoSwap {
-    fn name(&self) -> &'static str {
+    fn name(&self) -> ProviderName{
         JUNOSWAP
     }
 }

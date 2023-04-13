@@ -29,7 +29,7 @@ pub mod boot {
     use cosmwasm_std::{Addr, Empty};
 
     /// Contract wrapper for interacting with BOOT
-    #[boot_contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
+    #[contract(InstantiateMsg, ExecuteMsg, QueryMsg, Empty)]
     pub struct CwStakingApi<Chain>;
 
     impl<Chain: BootEnvironment> ApiDeployer<Chain, Empty> for CwStakingApi<Chain> {}

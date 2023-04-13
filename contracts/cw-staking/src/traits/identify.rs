@@ -1,4 +1,5 @@
-/// Identify a staking provider by its name and ibc status
+pub type ProviderName = &'static str;
+/// Identify a staking provider by its name
 pub trait Identify {
-    fn name(&self) -> &'static str;
+    fn name(&self) -> ProviderName;
 }

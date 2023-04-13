@@ -25,7 +25,7 @@ impl api::ApiQueryMsg for DexQueryMsg {}
 #[cosmwasm_schema::cw_serde]
 pub struct DexInstantiateMsg {
     pub swap_fee: Decimal,
-    pub recipient_os: u32,
+    pub recipient_account: u32,
 }
 
 /// Dex Execute msg
@@ -34,7 +34,7 @@ pub enum DexApiExecuteMsg {
     Request(DexExecuteMsg),
     UpdateFee {
         swap_fee: Option<Decimal>,
-        recipient_os_id: Option<u32>,
+        recipient_account: Option<u32>,
     },
 }
 

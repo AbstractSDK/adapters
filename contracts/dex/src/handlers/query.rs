@@ -25,7 +25,7 @@ pub fn query_handler(deps: Deps, env: Env, api: &DexApi, msg: DexQueryMsg) -> De
         } => {
             let exchange_id = exchange_resolver::identify_exchange(&dex)?;
             // if exchange is on an app-chain, execute the action on the app-chain
-            if exchange_id.over_ibc() {
+            if !exchange_id.is_deployed_locally(&env) {
                 return Err(DexError::IbcMsgQuery);
             }
 

@@ -1,10 +1,10 @@
 use crate::{
     commands::{coins_in_assets, cw_approve_msgs},
-    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread},
+    dex_trait::{Fee, FeeOnInput, Identify, Return, Spread, DexName},
     error::DexError,
     DEX,
 };
-use abstract_core::objects::PoolAddress;
+use abstract_core::{objects::PoolAddress, TERRA};
 use abstract_sdk::cw_helpers::cosmwasm_std::wasm_smart_query;
 use astroport::pair::{PoolResponse, SimulationResponse};
 use cosmwasm_std::{to_binary, wasm_execute, CosmosMsg, Decimal, Deps, Uint128};
@@ -16,11 +16,11 @@ pub const ASTROPORT: &str = "astroport";
 pub struct Astroport {}
 
 impl Identify for Astroport {
-    fn name(&self) -> &'static str {
+    fn name(&self) -> DexName{
         ASTROPORT
     }
-    fn over_ibc(&self) -> bool {
-        false
+    fn supported_chains(&self) -> &[&[crate::dex_trait::ChainName]] {
+        &[TERRA]
     }
 }
 

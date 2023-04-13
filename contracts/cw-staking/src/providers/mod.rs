@@ -9,3 +9,5 @@ pub mod astroport;
 pub mod osmosis;
 
 pub mod resolver;
+
+pub(self) use crate::traits::identify::ProviderName;

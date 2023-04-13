@@ -10,7 +10,7 @@ use abstract_core::ibc_client::CallbackInfo;
 use abstract_core::objects::ans_host::AnsHost;
 use abstract_core::objects::AnsAsset;
 use abstract_sdk::{features::AbstractNameService, Execution};
-use abstract_sdk::{IbcInterface, OsVerification, Resolve};
+use abstract_sdk::{IbcInterface, Resolve, OsVerification};
 use cosmwasm_std::{to_binary, Coin, Deps, DepsMut, Env, MessageInfo, Response, StdError};
 
 const ACTION_RETRIES: u8 = 3;
@@ -29,29 +29,30 @@ pub fn execute_handler(
                 action,
             } = msg;
             let exchange = exchange_resolver::identify_exchange(&dex_name)?;
-            // if exchange is on an app-chain, execute the action on the app-chain
-            if exchange.over_ibc() {
-                handle_ibc_api_request(&deps, info, &api, dex_name, &action)
-            } else {
+
+            if exchange.is_deployed_locally(&env) {
                 // the action can be executed on the local chain
                 handle_local_api_request(deps, env, info, api, action, dex_name)
+            } else {
+                // the action needs to be executed on a remote chain
+                handle_ibc_api_request(&deps, info, &api, dex_name, &action)
             }
         }
         DexApiExecuteMsg::UpdateFee {
             swap_fee,
-            recipient_os_id,
+            recipient_account,
         } => {
             // only previous OS can change the owner
-            api.os_registry(deps.as_ref()).assert_proxy(&info.sender)?;
+            api.account_registry(deps.as_ref()).assert_proxy(&info.sender)?;
             if let Some(swap_fee) = swap_fee {
                 let mut fee = SWAP_FEE.load(deps.storage)?;
                 fee.set_share(swap_fee)?;
                 SWAP_FEE.save(deps.storage, &fee)?;
             }
 
-            if let Some(os_id) = recipient_os_id {
+            if let Some(account_id) = recipient_account {
                 let mut fee = SWAP_FEE.load(deps.storage)?;
-                let recipient = api.os_registry(deps.as_ref()).proxy_address(os_id)?;
+                let recipient = api.account_registry(deps.as_ref()).proxy_address(account_id)?;
                 fee.set_recipient(deps.api, recipient)?;
                 SWAP_FEE.save(deps.storage, &fee)?;
             }

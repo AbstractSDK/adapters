@@ -2,7 +2,7 @@ use crate::msg::{
     Claim, RewardTokensResponse, StakeResponse, StakingInfoResponse, UnbondingResponse,
 };
 use crate::traits::cw_staking_adapter::CwStakingAdapter;
-use crate::traits::identify::Identify;
+use crate::traits::identify::{Identify, ProviderName};
 use crate::{contract::CwStakingResult, error::StakingError};
 use abstract_sdk::{
     core::objects::{AssetEntry, LpToken},
@@ -47,7 +47,7 @@ impl Default for WynDex {
 }
 
 impl Identify for WynDex {
-    fn name(&self) -> &'static str {
+    fn name(&self) -> ProviderName{
         WYNDEX
     }
 }

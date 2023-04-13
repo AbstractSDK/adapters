@@ -47,11 +47,11 @@ boot-core = { version = "0.8.0" }
 
 tokio = { version = "1.4", features = ["full"] }
 
-abstract-testing = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git" }
-abstract-core = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git"}
-abstract-boot = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git"}
-abstract-sdk = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git" }
-abstract-api = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git" }
+abstract-testing = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git", branch = "add/network_names" }
+abstract-core = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git", branch = "add/network_names"}
+abstract-boot = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git", branch = "add/network_names"}
+abstract-sdk = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git", branch = "add/network_names" }
+abstract-api = { version = "0.13", git = "https://github.com/Abstract-OS/contracts.git", branch = "add/network_names" }
 
 ## Testing
 rstest = "0.16.0"

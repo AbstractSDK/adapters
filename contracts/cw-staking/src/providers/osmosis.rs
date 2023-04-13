@@ -4,6 +4,8 @@ use osmosis_std::shim::Duration as OsmosisDuration;
 
 use crate::{error::StakingError, traits::identify::Identify};
 
+use super::ProviderName;
+
 pub const OSMOSIS: &str = "osmosis";
 
 #[derive(Default)]
@@ -16,7 +18,7 @@ pub struct Osmosis {
 }
 
 impl Identify for Osmosis {
-    fn name(&self) -> &'static str {
+    fn name(&self) -> ProviderName{
         OSMOSIS
     }
 }
