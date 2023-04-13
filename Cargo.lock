@@ -26,12 +26,13 @@ dependencies = [
 
 [[package]]
 name = "abstract-account-factory"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "886085f4ab4589d8ba1d24d0379e07cc179fd3d96deb8a90310f0b4a955d6a11"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw-asset",
@@ -68,12 +69,13 @@ dependencies = [
 
 [[package]]
 name = "abstract-ans-host"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "738994de6b5c538134e8e9f0ed68fe7dbe00fb971a8e7606b48da998a43c4397"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-std",
  "cw-asset",
  "cw-controllers 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -88,10 +90,11 @@ dependencies = [
 [[package]]
 name = "abstract-api"
 version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74d9f007408adb7ef6532e012b303aa7379ab713c3782b01e78412de7cc563dd"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw-controllers 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -135,14 +138,15 @@ dependencies = [
 [[package]]
 name = "abstract-boot"
 version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbebc87d4c81808280c296624abbe7875daa3d6aaa0d88a95b49085e62028921"
 dependencies = [
- "abstract-account-factory 0.14.0",
- "abstract-ans-host 0.14.0",
- "abstract-core 0.14.0",
- "abstract-manager 0.14.0",
+ "abstract-account-factory 0.14.1",
+ "abstract-ans-host 0.14.1",
+ "abstract-core 0.14.1",
+ "abstract-manager 0.14.1",
  "abstract-module-factory 0.14.0",
- "abstract-proxy 0.14.0",
+ "abstract-proxy 0.14.1",
  "abstract-version-control 0.14.0",
  "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cosmwasm-schema",
@@ -189,10 +193,11 @@ dependencies = [
 
 [[package]]
 name = "abstract-core"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c57a8de804f6703050bba5757babbab8031f9707ae390dfc7d8b9c823530aeb3"
 dependencies = [
- "abstract-ica 0.14.0",
+ "abstract-ica 0.14.1",
  "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -214,13 +219,13 @@ dependencies = [
 
 [[package]]
 name = "abstract-cw-staking-api"
-version = "0.11.0"
+version = "0.14.0"
 dependencies = [
  "abstract-api",
  "abstract-boot 0.14.0",
- "abstract-core 0.14.0",
+ "abstract-core 0.14.1",
  "abstract-cw-staking-api",
- "abstract-sdk 0.14.0",
+ "abstract-sdk 0.14.1",
  "abstract-testing",
  "anyhow",
  "astroport 2.0.0 (git+https://github.com/astroport-fi/astroport-core.git?rev=126d43216111df786472fe2a845c1e2fadfe4a36)",
@@ -254,13 +259,13 @@ dependencies = [
 
 [[package]]
 name = "abstract-dex-api"
-version = "0.11.0"
+version = "0.14.0"
 dependencies = [
  "abstract-api",
  "abstract-boot 0.14.0",
- "abstract-core 0.14.0",
+ "abstract-core 0.14.1",
  "abstract-dex-api",
- "abstract-sdk 0.14.0",
+ "abstract-sdk 0.14.1",
  "abstract-testing",
  "anyhow",
  "astroport 2.0.0 (git+https://github.com/astroport-fi/astroport-core.git?rev=7bedc6f27e59ef8b921a0980be9bc30c4aab7459)",
@@ -303,8 +308,9 @@ dependencies = [
 
 [[package]]
 name = "abstract-ica"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e5042e327002b7348d7892b494616306f1c0461a88eef831108b5c7350747c9e"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -326,8 +332,9 @@ dependencies = [
 
 [[package]]
 name = "abstract-macros"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11e86fc412242893d7d6ba0ba86322cc890966e90010a7329e04bf11d4bc21a3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -359,12 +366,13 @@ dependencies = [
 
 [[package]]
 name = "abstract-manager"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b15f682bc51afeb6d751d0b4d4918310554e0a76af7e48d2b2ddf6dd6f3985b"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw-asset",
@@ -402,11 +410,12 @@ dependencies = [
 [[package]]
 name = "abstract-module-factory"
 version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "559bb858b94d0c6354d50eb4002527f9ea16443cd6bd16fe6ee4a2fe0742cddc"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw-asset",
@@ -442,12 +451,13 @@ dependencies = [
 
 [[package]]
 name = "abstract-proxy"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62843636d9f88dc4281d02bc7204ecb839eba13505aff6c43f4f1cfde0ac8ff5"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw-asset",
@@ -483,11 +493,12 @@ dependencies = [
 
 [[package]]
 name = "abstract-sdk"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc27d8d26f8e6384fad8097d5878f5199c79fa8ba4ab3a8419a0ac93739814ce"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
  "abstract-testing",
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -504,12 +515,12 @@ dependencies = [
 
 [[package]]
 name = "abstract-tendermint-staking-api"
-version = "0.11.0"
+version = "0.14.0"
 dependencies = [
  "abstract-api",
  "abstract-boot 0.14.0",
- "abstract-core 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-sdk 0.14.1",
  "boot-core 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cosmwasm-schema",
  "cosmwasm-std",
@@ -518,10 +529,11 @@ dependencies = [
 
 [[package]]
 name = "abstract-testing"
-version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3951e860ce66b9172d7b9c905d87c410b17600b470ed8274efbb70ff2be78ae"
 dependencies = [
- "abstract-core 0.14.0",
+ "abstract-core 0.14.1",
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw-asset",
@@ -555,11 +567,12 @@ dependencies = [
 [[package]]
 name = "abstract-version-control"
 version = "0.14.0"
-source = "git+https://github.com/Abstract-OS/contracts.git?branch=update/0.14.0#8918f74b28d112e2c54b7f896f09a4bac7a207c9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a6b3a3c27ae50660e688b490a3f45fb644646179355cea9d90ed63a823fd37af"
 dependencies = [
- "abstract-core 0.14.0",
- "abstract-macros 0.14.0",
- "abstract-sdk 0.14.0",
+ "abstract-core 0.14.1",
+ "abstract-macros 0.14.1",
+ "abstract-sdk 0.14.1",
  "cosmwasm-std",
  "cw-controllers 1.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "cw-ownable",
