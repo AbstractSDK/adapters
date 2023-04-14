@@ -51,7 +51,7 @@ terraswap = { version = "2.8.0", optional = true }
 astroport = { git = "https://github.com/astroport-fi/astroport-core.git", rev = "7bedc6f27e59ef8b921a0980be9bc30c4aab7459", optional = true }
 
 # Osmosis #
-osmosis-std = { version = "0.13.2", optional = true }
+osmosis-std = { version = "0.15.2", optional = true }
 
 [dev-dependencies]
 abstract-boot = { workspace = true, features = ["daemon"] }
