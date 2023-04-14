@@ -18,6 +18,7 @@ lintfix:
 check:
   cargo check --all-features
 
+
 refresh:
   cargo clean && cargo update
 
@@ -46,7 +47,7 @@ publish-schemas version:
   SCHEMA_OUT_DIR=$(cd ../schemas && echo "$PWD") \
   VERSION={{version}} \
     cargo ws exec --no-bail bash -lc 'cargo schema && { outdir="$SCHEMA_OUT_DIR/abstract/${PWD##*/}/$VERSION"; mkdir -p "$outdir"; rm -rf "schema/raw"; cp -a "schema/." "$outdir"; }'
-
+    
 publish:
   set -e
   git tag v`grep -A1 "\[workspace.package\]" Cargo.toml | awk -F'"' '/version/ {print $2}'`
