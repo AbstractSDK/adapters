@@ -22,6 +22,7 @@ juno = ["dep:wasmswap", "dep:cw20_junoswap", "dep:wyndex"]
 terra = ["dep:terraswap", "dep:astroport", "dep:cw20_junoswap"]
 osmosis = ["dep:osmosis-std"]
 all = ["terra", "juno"]
+schema = ["abstract-api/schema"]
 
 # Keep as is until TendermintStake updates.
 [dependencies]

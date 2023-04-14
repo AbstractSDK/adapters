@@ -27,3 +27,16 @@ abstract-api = { workspace = true }
 
 boot-core = { workspace = true, optional = true }
 abstract-boot = { workspace = true, optional = true }
+
+[dev-dependencies]
+abstract-boot = { workspace = true, features = ["daemon"] }
+tokio = { workspace = true }
+semver = { workspace = true }
+anyhow = { workspace = true }
+speculoos = { workspace = true }
+dotenv = "0.15.0"
+env_logger = "0.10.0"
+clap = { workspace = true }
+abstract-testing = { workspace = true }
+abstract-sdk = { workspace = true, features = ["test-utils"] }
+boot-cw-plus = { workspace = true }

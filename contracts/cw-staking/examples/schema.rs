@@ -9,5 +9,6 @@ fn main() {
     create_dir_all(&out_dir).unwrap();
     remove_schemas(&out_dir).unwrap();
 
+    #[cfg(feature = "schema")]
     CwStakingApi::export_schema(&out_dir);
 }

@@ -24,7 +24,7 @@
       ],
       "properties": {
         "module": {
-          "$ref": "#/definitions/ApiRequestMsg_for_CwStakingExecuteMsg"
+          "$ref": "#/definitions/ApiRequestMsg_for_TendermintStakingExecuteMsg"
         }
       },
       "additionalProperties": false
@@ -57,22 +57,7 @@
     }
   ],
   "definitions": {
-    "AnsAsset": {
-      "type": "object",
-      "required": [
-        "amount",
-        "name"
-      ],
-      "properties": {
-        "amount": {
-          "$ref": "#/definitions/Uint128"
-        },
-        "name": {
-          "$ref": "#/definitions/AssetEntry"
-        }
-      }
-    },
-    "ApiRequestMsg_for_CwStakingExecuteMsg": {
+    "ApiRequestMsg_for_TendermintStakingExecuteMsg": {
       "description": "An api request. If proxy is None, then the sender must be an Account manager and the proxy address is extrapolated from the Account id.",
       "type": "object",
       "required": [
@@ -89,16 +74,12 @@
           "description": "The actual request",
           "allOf": [
             {
-              "$ref": "#/definitions/CwStakingExecuteMsg"
+              "$ref": "#/definitions/TendermintStakingExecuteMsg"
             }
           ]
         }
       },
       "additionalProperties": false
-    },
-    "AssetEntry": {
-      "description": "May key to retrieve information on an asset",
-      "type": "string"
     },
     "BaseExecuteMsg": {
       "description": "Configuration message for the api",
@@ -155,171 +136,6 @@
       "description": "Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.",
       "type": "string"
     },
-    "CwStakingAction": {
-      "description": "Possible actions to perform on the staking contract All provide the staking token information",
-      "oneOf": [
-        {
-          "description": "Stakes/bonds a given token",
-          "type": "object",
-          "required": [
-            "stake"
-          ],
-          "properties": {
-            "stake": {
-              "type": "object",
-              "required": [
-                "staking_token"
-              ],
-              "properties": {
-                "staking_token": {
-                  "$ref": "#/definitions/AnsAsset"
-                },
-                "unbonding_period": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/definitions/Duration"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "Unstake a given token",
-          "type": "object",
-          "required": [
-            "unstake"
-          ],
-          "properties": {
-            "unstake": {
-              "type": "object",
-              "required": [
-                "staking_token"
-              ],
-              "properties": {
-                "staking_token": {
-                  "$ref": "#/definitions/AnsAsset"
-                },
-                "unbonding_period": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/definitions/Duration"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "Claim rewards for a given token",
-          "type": "object",
-          "required": [
-            "claim_rewards"
-          ],
-          "properties": {
-            "claim_rewards": {
-              "type": "object",
-              "required": [
-                "staking_token"
-              ],
-              "properties": {
-                "staking_token": {
-                  "$ref": "#/definitions/AssetEntry"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "Claim matured unbonding tokens",
-          "type": "object",
-          "required": [
-            "claim"
-          ],
-          "properties": {
-            "claim": {
-              "type": "object",
-              "required": [
-                "staking_token"
-              ],
-              "properties": {
-                "staking_token": {
-                  "$ref": "#/definitions/AssetEntry"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "additionalProperties": false
-        }
-      ]
-    },
-    "CwStakingExecuteMsg": {
-      "description": "A request message that's sent to this staking api",
-      "type": "object",
-      "required": [
-        "action",
-        "provider"
-      ],
-      "properties": {
-        "action": {
-          "$ref": "#/definitions/CwStakingAction"
-        },
-        "provider": {
-          "description": "The name of the staking provider",
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Duration": {
-      "description": "Duration is a delta of time. You can add it to a BlockInfo or Expiration to move that further in the future. Note that an height-based Duration and a time-based Expiration cannot be combined",
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "height"
-          ],
-          "properties": {
-            "height": {
-              "type": "integer",
-              "format": "uint64",
-              "minimum": 0.0
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "Time in seconds",
-          "type": "object",
-          "required": [
-            "time"
-          ],
-          "properties": {
-            "time": {
-              "type": "integer",
-              "format": "uint64",
-              "minimum": 0.0
-            }
-          },
-          "additionalProperties": false
-        }
-      ]
-    },
     "Empty": {
       "description": "An empty struct that serves as a placeholder in different places, such as contracts that don't set a custom message.\n\nIt is designed to be expressable in correct JSON and JSON Schema but contains no meaningful data. Previously we used enums without cases, but those cannot represented as valid JSON Schema (https://github.com/CosmWasm/cosmwasm/issues/451)",
       "type": "object"
@@ -365,6 +181,176 @@
           "properties": {
             "error": {
               "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "TendermintStakingExecuteMsg": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "delegate"
+          ],
+          "properties": {
+            "delegate": {
+              "type": "object",
+              "required": [
+                "amount",
+                "validator"
+              ],
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/Uint128"
+                },
+                "validator": {
+                  "description": "Validator address",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "undelegate_from"
+          ],
+          "properties": {
+            "undelegate_from": {
+              "type": "object",
+              "required": [
+                "validator"
+              ],
+              "properties": {
+                "amount": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/Uint128"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "validator": {
+                  "description": "Validator address",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "undelegate_all"
+          ],
+          "properties": {
+            "undelegate_all": {
+              "type": "object",
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "redelegate"
+          ],
+          "properties": {
+            "redelegate": {
+              "type": "object",
+              "required": [
+                "destination_validator",
+                "source_validator"
+              ],
+              "properties": {
+                "amount": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/definitions/Uint128"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "destination_validator": {
+                  "description": "Validator address",
+                  "type": "string"
+                },
+                "source_validator": {
+                  "description": "Validator address",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "set_withdraw_address"
+          ],
+          "properties": {
+            "set_withdraw_address": {
+              "type": "object",
+              "required": [
+                "new_withdraw_address"
+              ],
+              "properties": {
+                "new_withdraw_address": {
+                  "description": "The new `withdraw_address`",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "withdraw_delegator_reward"
+          ],
+          "properties": {
+            "withdraw_delegator_reward": {
+              "type": "object",
+              "required": [
+                "validator"
+              ],
+              "properties": {
+                "validator": {
+                  "description": "Validator address",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Withdraw all the rewards",
+          "type": "object",
+          "required": [
+            "withdraw_all_rewards"
+          ],
+          "properties": {
+            "withdraw_all_rewards": {
+              "type": "object",
+              "additionalProperties": false
             }
           },
           "additionalProperties": false

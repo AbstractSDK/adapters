@@ -1,17 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "TradersResponse",
+  "title": "ConfigResponse",
   "type": "object",
   "required": [
-    "traders"
+    "ans_host_address",
+    "dependencies",
+    "version_control_address"
   ],
   "properties": {
-    "traders": {
-      "description": "Contains all traders",
+    "ans_host_address": {
+      "$ref": "#/definitions/Addr"
+    },
+    "dependencies": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/Addr"
+        "type": "string"
       }
+    },
+    "version_control_address": {
+      "$ref": "#/definitions/Addr"
     }
   },
   "additionalProperties": false,

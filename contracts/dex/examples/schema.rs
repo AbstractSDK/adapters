@@ -10,6 +10,6 @@ fn main() {
     create_dir_all(&out_dir).unwrap();
     remove_schemas(&out_dir).unwrap();
 
+    // #[cfg(feature = "schema")]
     DexApi::export_schema(&out_dir);
-    export_schema_with_title(&schema_for!(SimulateSwapResponse), &out_dir, "ApiResponse");
 }

@@ -6,6 +6,7 @@ use abstract_core::{
     api,
     objects::{AnsAsset, AssetEntry, DexAssetPairing},
 };
+use abstract_core::objects::AccountId;
 use cosmwasm_schema::QueryResponses;
 use cosmwasm_std::{CosmosMsg, Decimal, Uint128};
 
@@ -25,7 +26,7 @@ impl api::ApiQueryMsg for DexQueryMsg {}
 #[cosmwasm_schema::cw_serde]
 pub struct DexInstantiateMsg {
     pub swap_fee: Decimal,
-    pub recipient_os: u32,
+    pub recipient_account: AccountId,
 }
 
 /// Dex Execute msg
@@ -34,7 +35,7 @@ pub enum DexApiExecuteMsg {
     Request(DexExecuteMsg),
     UpdateFee {
         swap_fee: Option<Decimal>,
-        recipient_os_id: Option<u32>,
+        recipient_account_id: Option<AccountId>,
     },
 }
 

@@ -36,6 +36,7 @@ juno = [
 # osmosis = ["dep:osmosis-std"]
 terra = ["dep:astroport"]
 all = ["juno", "terra", "boot"]
+#schema = ["abstract-api/schema"]
 
 
 [dependencies]

@@ -2,28 +2,24 @@ use abstract_boot::ApiDeployer;
 
 use abstract_boot::boot_core::networks::{parse_network, NetworkInfo};
 use abstract_boot::boot_core::*;
-use abstract_dex_api::boot::DexApi;
-use abstract_dex_api::msg::DexInstantiateMsg;
-use abstract_dex_api::EXCHANGE;
-use cosmwasm_std::Decimal;
+use abstract_tendermint_staking_api::boot::TMintStakingApi;
+use abstract_tendermint_staking_api::TENDERMINT_STAKING;
+use cosmwasm_std::{Decimal, Empty};
 use semver::Version;
 use std::sync::Arc;
 use tokio::runtime::Runtime;
 
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
-fn deploy_dex(network: NetworkInfo) -> anyhow::Result<()> {
+fn deploy_tendermint_staking(network: NetworkInfo) -> anyhow::Result<()> {
     let version: Version = CONTRACT_VERSION.parse().unwrap();
     let rt = Arc::new(Runtime::new()?);
     let options = DaemonOptionsBuilder::default().network(network).build();
     let (_sender, chain) = instantiate_daemon_env(&rt, options?)?;
-    let mut dex = DexApi::new(EXCHANGE, chain);
+    let mut dex = TMintStakingApi::new(TENDERMINT_STAKING, chain);
     dex.deploy(
         version,
-        DexInstantiateMsg {
-            swap_fee: Decimal::percent(1),
-            recipient_account: 0,
-        },
+        Empty {},
     )?;
     Ok(())
 }
@@ -48,5 +44,5 @@ fn main() -> anyhow::Result<()> {
 
     let network = parse_network(&args.network_id);
 
-    deploy_dex(network)
+    deploy_tendermint_staking(network)
 }

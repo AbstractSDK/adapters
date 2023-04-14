@@ -3,7 +3,7 @@
   "title": "QueryMsg",
   "oneOf": [
     {
-      "description": "A configuration message to the base.",
+      "description": "A query to the base.",
       "type": "object",
       "required": [
         "base"
@@ -19,10 +19,10 @@
       "description": "Custom query",
       "type": "object",
       "required": [
-        "app"
+        "module"
       ],
       "properties": {
-        "app": {
+        "module": {
           "$ref": "#/definitions/CwStakingQueryMsg"
         }
       },
@@ -52,13 +52,13 @@
           "additionalProperties": false
         },
         {
-          "description": "Returns [`TradersResponse`]. TODO: enable pagination",
+          "description": "Returns [`AuthorizedAddressesResponse`].",
           "type": "object",
           "required": [
-            "traders"
+            "authorized_addresses"
           ],
           "properties": {
-            "traders": {
+            "authorized_addresses": {
               "type": "object",
               "required": [
                 "proxy_address"
