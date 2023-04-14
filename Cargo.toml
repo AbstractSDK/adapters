@@ -1,7 +1,5 @@
 [workspace]
-members = [
-    "contracts/*",
-]
+members = ["contracts/*"]
 
 # Enable the version 2 feature resolver, which avoids unifying features for targets that are not being built
 #
@@ -15,7 +13,11 @@ resolver = "2"
 
 [workspace.package]
 version = "0.14.0"
-authors = ["CyberHoward <cyberhoward@protonmail.com>", "Adair <adair@abstract.money>", "Abstract Money <contact@abstract.money>"]
+authors = [
+  "CyberHoward <cyberhoward@protonmail.com>",
+  "Adair <adair@abstract.money>",
+  "Abstract Money <contact@abstract.money>",
+]
 edition = "2021"
 homepage = "https://abstract.money"
 documentation = "https://docs.abstract.money/"
