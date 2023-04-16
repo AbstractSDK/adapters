@@ -49,11 +49,11 @@ boot-core = { version = "0.10.0" }
 
 tokio = { version = "1.4", features = ["full"] }
 
-abstract-testing = { version = "0.14", git = "https://github.com/Abstract-OS/contracts", branch = "feature/schema" }
-abstract-core = { version = "0.14", git = "https://github.com/Abstract-OS/contracts", branch = "feature/schema" }
-abstract-boot = { version = "0.14", git = "https://github.com/Abstract-OS/contracts", branch = "feature/schema" }
-abstract-sdk = { version = "0.14", git = "https://github.com/Abstract-OS/contracts", branch = "feature/schema" }
-abstract-api = { version = "0.14", git = "https://github.com/Abstract-OS/contracts", branch = "feature/schema" }
+abstract-testing = { version = "0.14" }
+abstract-core = { version = "0.14" }
+abstract-boot = { version = "0.14" }
+abstract-sdk = { version = "0.14" }
+abstract-api = { version = "0.14" }
 
 ## Testing
 rstest = "0.16.0"

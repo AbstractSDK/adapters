@@ -14,6 +14,7 @@ crate-type = ["cdylib", "rlib"]
 default = ["export"]
 export = []
 boot = ["dep:abstract-boot", "dep:boot-core"]
+schema = ["abstract-api/schema"]
 
 
 # Keep as is until TendermintStake updates.

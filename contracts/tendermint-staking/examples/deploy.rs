@@ -16,8 +16,8 @@ fn deploy_tendermint_staking(network: NetworkInfo) -> anyhow::Result<()> {
     let rt = Arc::new(Runtime::new()?);
     let options = DaemonOptionsBuilder::default().network(network).build();
     let (_sender, chain) = instantiate_daemon_env(&rt, options?)?;
-    let mut dex = TMintStakingApi::new(TENDERMINT_STAKING, chain);
-    dex.deploy(
+    let mut staking = TMintStakingApi::new(TENDERMINT_STAKING, chain);
+    staking.deploy(
         version,
         Empty {},
     )?;
