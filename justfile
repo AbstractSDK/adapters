@@ -34,7 +34,6 @@ watch-test:
 run-script script chain:
   (cd scripts && cargo run --bin {{script}} -- --network-id {{chain}})
 
-
 # `just wasm-module cw-staking --features export,terra --no-default-features`
 wasm-contract module +args='':
   RUSTFLAGS='-C link-arg=-s' cargo wasm --package abstract-{{module}}-api {{args}}
