@@ -158,7 +158,7 @@ mod test {
     fn expected_request_with_test_proxy(request: DexExecuteMsg) -> ExecuteMsg {
         ApiRequestMsg {
             proxy_address: Some(abstract_testing::prelude::TEST_PROXY.to_string()),
-            request: request.into(),
+            request: request,
         }
         .into()
     }

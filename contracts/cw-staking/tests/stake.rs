@@ -22,7 +22,7 @@ fn stake_lp() -> anyhow::Result<()> {
     let wyndex = wyndex_bundle::WynDex::store_on(chain.clone())?;
 
     let _root_os = create_default_os(&deployment.account_factory)?;
-    let mut staking_api = CwStakingApi::new(CW_STAKING, chain.clone());
+    let mut staking_api = CwStakingApi::new(CW_STAKING, chain);
 
     staking_api.deploy("1.0.0".parse()?, Empty {})?;
 

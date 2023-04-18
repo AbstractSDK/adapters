@@ -57,16 +57,18 @@ impl CwStakingAdapter for Astroport {
         deps: Deps,
         _env: Env,
         ans_host: &AnsHost,
-        lp_token: AssetEntry,
+        staking_asset: AssetEntry,
     ) -> AbstractSdkResult<()> {
         self.generator_contract_address =
-            self.staking_contract_address(deps, ans_host, &lp_token)?;
+            self.staking_contract_address(deps, ans_host, &staking_asset)?;
 
-        let AssetInfo::Cw20(token_addr) = lp_token.resolve(&deps.querier, ans_host)? else {
+        self.lp_token = self.provider_lp_token(&staking_asset)?;
+
+        let AssetInfo::Cw20(token_addr) = self.lp_token.resolve(&deps.querier, ans_host)? else {
                 return Err(StdError::generic_err("expected CW20 as LP token for staking.").into());
             };
+
         self.lp_token_address = token_addr;
-        self.lp_token = LpToken::try_from(lp_token)?;
         Ok(())
     }
 

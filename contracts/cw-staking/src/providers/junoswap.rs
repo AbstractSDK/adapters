@@ -48,15 +48,17 @@ impl CwStakingAdapter for JunoSwap {
         deps: Deps,
         _env: Env,
         ans_host: &AnsHost,
-        lp_token: AssetEntry,
+        staking_token: AssetEntry,
     ) -> Result<(), AbstractSdkError> {
-        self.staking_contract_address = self.staking_contract_address(deps, ans_host, &lp_token)?;
+        self.staking_contract_address =
+            self.staking_contract_address(deps, ans_host, &staking_token)?;
+        self.lp_token = self.provider_lp_token(&staking_token)?;
 
-        let AssetInfoBase::Cw20(token_addr) = lp_token.resolve(&deps.querier, ans_host)? else {
+        let AssetInfoBase::Cw20(token_addr) = self.lp_token.resolve(&deps.querier, ans_host)? else {
                 return Err(AbstractSdkError::Std(StdError::generic_err("expected CW20 as LP token for staking.")));
             };
+
         self.lp_token_address = token_addr;
-        self.lp_token = LpToken::try_from(lp_token)?;
         Ok(())
     }
 
