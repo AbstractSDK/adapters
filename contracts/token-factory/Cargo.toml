@@ -1,0 +1,48 @@
+[package]
+name = "abstract-token-factory-api"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+
+exclude = ["contract.wasm", "hash.txt"]
+
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["export"]
+export = []
+boot = ["dep:abstract-boot", "dep:boot-core"]
+
+
+# Keep as is until TendermintStake updates.
+[dependencies]
+cosmwasm-std = { workspace = true }
+cosmwasm-schema = { workspace = true }
+thiserror = { workspace = true }
+abstract-core = { workspace = true }
+abstract-sdk = { workspace = true }
+abstract-api = { workspace = true }
+
+boot-core = { workspace = true, optional = true }
+abstract-boot = { workspace = true, optional = true }
+
+#cosmwasm-storage = "1.1"
+#cw-storage-plus = "1.0.0"
+token-bindings = { git = "https://github.com/CosmosContracts/token-bindings", branch = "main"}
+#cw2 = "1.0.0"
+#schemars = "0.8"
+#serde = { version = "1.0", default-features = false, features = ["derive"] }
+#thiserror = "1.0"
+
+[dev-dependencies]
+abstract-api ={ workspace = true , features = ["schema"]}
+clap = { workspace = true }
+env_logger = { workspace = true }
+tokio = { workspace = true }
+semver = { workspace = true }
+dotenv = { workspace = true }
+log = { workspace = true }
+speculoos = { workspace = true }
+anyhow = { workspace = true }
