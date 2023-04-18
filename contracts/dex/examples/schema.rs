@@ -1,6 +1,5 @@
 use abstract_dex_api::contract::DexApi;
-use abstract_dex_api::msg::SimulateSwapResponse;
-use cosmwasm_schema::{export_schema_with_title, remove_schemas, schema_for};
+use cosmwasm_schema::remove_schemas;
 use std::env::current_dir;
 use std::fs::create_dir_all;
 
@@ -10,7 +9,5 @@ fn main() {
     create_dir_all(&out_dir).unwrap();
     remove_schemas(&out_dir).unwrap();
 
-    #[cfg(feature = "schema")]
     DexApi::export_schema(&out_dir);
-    export_schema_with_title(&schema_for!(SimulateSwapResponse), &out_dir, "ApiResponse");
 }

@@ -30,3 +30,11 @@ abstract-boot = { workspace = true, optional = true }
 
 [dev-dependencies]
 abstract-api ={ workspace = true , features = ["schema"]}
+clap = { workspace = true }
+env_logger = { workspace = true }
+tokio = { workspace = true }
+semver = { workspace = true }
+dotenv = { workspace = true }
+log = { workspace = true }
+speculoos = { workspace = true }
+anyhow = { workspace = true }

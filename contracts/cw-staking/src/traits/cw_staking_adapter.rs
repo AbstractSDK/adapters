@@ -183,7 +183,6 @@ mod tests {
     }
 
     const TEST_STAKING_ASSET: &str = "terra2>astro,terra2>luna";
-    const TEST_STAKING_ASSET_ADDRESS: &str = "astro_luna_address";
 
     mod staking_entry {
         use super::*;

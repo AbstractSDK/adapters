@@ -54,6 +54,7 @@ astroport = { git = "https://github.com/astroport-fi/astroport-core.git", rev = 
 osmosis-std = { version = "0.13.2", optional = true }
 
 [dev-dependencies]
+abstract-api = { workspace = true, features = ["schema"]}
 abstract-boot = { workspace = true, features = ["daemon"] }
 tokio = { workspace = true }
 semver = { workspace = true }

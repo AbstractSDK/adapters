@@ -2,7 +2,6 @@
 //!
 //! `abstract_core::dex` is a generic dex-interfacing contract that handles address retrievals and dex-interactions.
 
-
 use abstract_core::{
     api,
     objects::{AnsAsset, AssetEntry, DexAssetPairing},
