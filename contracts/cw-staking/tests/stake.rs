@@ -198,7 +198,7 @@ fn claim_rewards() -> anyhow::Result<()> {
     staking_api.claim_rewards(AssetEntry::new(EUR_USD_LP), WYNDEX.into())?;
 
     // query balance
-    let balance = chain.query_balance(&proxy_addr, WYNDEX)?;
+    let balance = chain.query_balance(&proxy_addr, WYND_TOKEN)?;
     assert_that!(balance.u128()).is_equal_to(950u128);
 
     Ok(())
