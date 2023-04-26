@@ -123,15 +123,23 @@ impl CwStakingAdapter for WynDex {
     }
 
     fn claim_rewards(&self, _deps: Deps) -> Result<Vec<CosmosMsg>, StakingError> {
-        let msg = StakeCw20ExecuteMsg::WithdrawRewards {
+        let distribute_msg = StakeCw20ExecuteMsg::DistributeRewards { sender: None };
+        let withraw_msg = StakeCw20ExecuteMsg::WithdrawRewards {
             owner: None,
             receiver: None,
         };
-        Ok(vec![CosmosMsg::Wasm(WasmMsg::Execute {
-            contract_addr: self.staking_contract_address.to_string(),
-            msg: to_binary(&msg)?,
-            funds: vec![],
-        })])
+        Ok(vec![
+            CosmosMsg::Wasm(WasmMsg::Execute {
+                contract_addr: self.staking_contract_address.to_string(),
+                msg: to_binary(&distribute_msg)?,
+                funds: vec![],
+            }),
+            CosmosMsg::Wasm(WasmMsg::Execute {
+                contract_addr: self.staking_contract_address.to_string(),
+                msg: to_binary(&withraw_msg)?,
+                funds: vec![],
+            }),
+        ])
     }
 
     fn query_info(&self, querier: &QuerierWrapper) -> CwStakingResult<StakingInfoResponse> {

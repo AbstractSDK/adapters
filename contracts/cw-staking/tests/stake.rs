@@ -5,9 +5,9 @@ use abstract_core::objects::{AnsAsset, AssetEntry};
 use abstract_cw_staking_api::msg::{
     Claim, RewardTokensResponse, StakingInfoResponse, UnbondingResponse,
 };
-use boot_core::{BootQuery, Mock, TxHandler};
-use boot_cw_plus::Cw20ExecuteMsgFns;
-use cosmwasm_std::{Addr, Empty, Uint128};
+use boot_core::{Mock, TxHandler};
+use boot_cw_plus::{Cw20ExecuteMsgFns, Cw20QueryMsgFns};
+use cosmwasm_std::{coin, Addr, Empty, Uint128};
 use cw_asset::AssetInfoBase;
 use speculoos::*;
 use wyndex_bundle::{EUR_USD_LP, WYNDEX, WYNDEX_OWNER, WYND_TOKEN};
@@ -170,12 +170,7 @@ fn claim_unbonded_lp() -> anyhow::Result<()> {
     staking_api.claim(AssetEntry::new(EUR_USD_LP), WYNDEX.into())?;
 
     // query balance
-    let balance: cw20::BalanceResponse =
-        wyndex
-            .eur_usd_lp
-            .query(&cw20_base::msg::QueryMsg::Balance {
-                address: proxy_addr.to_string(),
-            })?;
+    let balance = wyndex.eur_usd_lp.balance(proxy_addr.to_string())?;
     assert_that!(balance.balance.u128()).is_equal_to(950u128);
 
     Ok(())
@@ -183,23 +178,25 @@ fn claim_unbonded_lp() -> anyhow::Result<()> {
 
 #[test]
 fn claim_rewards() -> anyhow::Result<()> {
-    let (chain, _, staking_api, os) = setup_mock()?;
+    let (chain, wyndex, staking_api, os) = setup_mock()?;
     let proxy_addr = os.proxy.address()?;
 
     let dur = Some(cw_utils::Duration::Time(2));
+
+    chain.set_balance(&wyndex.eur_usd_staking, vec![coin(20_000, WYND_TOKEN)])?;
 
     // stake 100 EUR
     staking_api.stake(AnsAsset::new(EUR_USD_LP, 100u128), WYNDEX.into(), dur)?;
 
     // forward 500 seconds
-    chain.wait_blocks(100)?;
+    chain.wait_blocks(1)?;
 
     // now claim rewards
     staking_api.claim_rewards(AssetEntry::new(EUR_USD_LP), WYNDEX.into())?;
 
     // query balance
     let balance = chain.query_balance(&proxy_addr, WYND_TOKEN)?;
-    assert_that!(balance.u128()).is_equal_to(950u128);
+    assert_that!(balance.u128()).is_equal_to(20_000u128);
 
     Ok(())
 }
