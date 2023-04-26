@@ -178,25 +178,29 @@ fn claim_unbonded_lp() -> anyhow::Result<()> {
 
 #[test]
 fn claim_rewards() -> anyhow::Result<()> {
-    let (chain, wyndex, staking_api, os) = setup_mock()?;
+    let (chain, mut wyndex, staking_api, os) = setup_mock()?;
     let proxy_addr = os.proxy.address()?;
 
     let dur = Some(cw_utils::Duration::Time(2));
-
-    chain.set_balance(&wyndex.eur_usd_staking, vec![coin(20_000, WYND_TOKEN)])?;
 
     // stake 100 EUR
     staking_api.stake(AnsAsset::new(EUR_USD_LP, 100u128), WYNDEX.into(), dur)?;
 
     // forward 500 seconds
-    chain.wait_blocks(1)?;
+    chain.wait_blocks(100)?;
+
+    chain.set_balance(&wyndex.eur_usd_staking, vec![coin(10_000, WYND_TOKEN)])?;
+    wyndex
+        .suite
+        .distribute_funds(wyndex.eur_usd_staking, WYNDEX_OWNER, &[])
+        .unwrap();
 
     // now claim rewards
     staking_api.claim_rewards(AssetEntry::new(EUR_USD_LP), WYNDEX.into())?;
 
     // query balance
     let balance = chain.query_balance(&proxy_addr, WYND_TOKEN)?;
-    assert_that!(balance.u128()).is_equal_to(20_000u128);
+    assert_that!(balance.u128()).is_equal_to(10_000u128);
 
     Ok(())
 }
