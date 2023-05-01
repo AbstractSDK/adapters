@@ -24,7 +24,7 @@ crate-type = ["cdylib", "rlib"]
 [features]
 export = []
 default = ["export"]
-boot = ["dep:boot-core", "dep:abstract-boot"]
+boot = ["dep:boot-core", "dep:abstract-boot", "export"]
 juno = [
   "dep:wasmswap",
   "dep:cw20_junoswap",
