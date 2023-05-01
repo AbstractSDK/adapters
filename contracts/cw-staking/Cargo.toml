@@ -63,7 +63,7 @@ cw20_junoswap = { package = "cw20", version = "0.10.0", optional = true }
 wasmswap = { git = "https://github.com/Wasmswap/wasmswap-contracts", tag = "v1.1.2-beta", features = [
   "library",
 ], optional = true }
-wyndex = { git = "https://github.com/cosmorama/wynddex.git", rev = "v1.1.2", optional = true }
+wyndex = { git = "https://github.com/cosmorama/wynddex.git", rev = "v2.0.3", optional = true }
 wyndex-stake = { git = "https://github.com/cosmorama/wynddex.git", rev = "v1.1.2", optional = true, features = [
   "library",
 ] }
