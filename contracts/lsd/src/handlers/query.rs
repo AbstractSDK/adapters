@@ -1,5 +1,5 @@
-use crate::msg::LsdQuery;
-use cosmwasm_std::Response;
+use crate::msg::{LsdInfo, InfoResponse};
+
 
 use crate::msg::{
     LsdExecuteMsg, LsdQueryMsg, GenerateMessagesResponse,
@@ -19,7 +19,7 @@ pub fn query_handler(
     msg: LsdQueryMsg,
 ) -> LsdResult<Binary> {
     match msg {
-        LsdQueryMsg::Query {
+        LsdQueryMsg::Info {
             lsd: lsd_name,
             query
         } => {     
@@ -51,17 +51,20 @@ pub fn query_handler(
 fn handle_local_query(
     deps: Deps,
     env: Env,
-    adapter: LsdAdapter,
-    action: LsdQuery,
+    adapter: &LsdAdapter,
+    query: LsdInfo,
     lsd: String,
 ) -> LsdResult<Binary> {
-    let exchange = lsd_resolver::resolve_lsd(&lsd)?;
-    let (msgs, _) = crate::traits::adapter::LsdAdapter::resolve_lsd_query(
-        &adapter,
-        deps.as_ref(),
-        action,
-        lsd,
-    )?;
-    let proxy_msg = adapter.executor(deps.as_ref()).execute(msgs)?;
-    Ok(Response::new().add_message(proxy_msg))
+    let lsd = lsd_resolver::resolve_lsd_query(&lsd)?;
+    let query_result = match query{
+        LsdInfo::UnderlyingToken {  } => {
+            let result = lsd.underlying_token(deps)?;
+            to_binary(&InfoResponse::UnderlyingToken(result))?
+        },
+        LsdInfo::LSDToken {  } => {
+            let result = lsd.lsd_token(deps)?;
+            to_binary(&InfoResponse::LSDToken(result))?
+        },
+    };
+    Ok(query_result)
 }

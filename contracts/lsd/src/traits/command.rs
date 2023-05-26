@@ -1,6 +1,5 @@
 use crate::error::LsdError;
 use cosmwasm_std::{CosmosMsg, Deps, Uint128};
-use cw_asset::Asset;
 
 use super::identity::Identify;
 
@@ -22,7 +21,7 @@ pub trait LsdCommand: Identify {
     ) -> Result<Vec<CosmosMsg>, LsdError>;
 
     /// Bonds native assets on the protocol using the protocol in question custom logic
-    fn burn(
+    fn unbond(
         &self,
         deps: Deps,
         amount: Uint128,

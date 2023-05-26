@@ -1,4 +1,5 @@
-use crate::error::LsdError;
+
+use crate::lsds::lsd_resolver::resolve_lsd_query;
 use crate::lsds::{lsd_resolver};
 use crate::msg::{LsdAction, LsdExecuteMsg, LsdName, IBC_DEX_ID};
 use crate::{
@@ -6,10 +7,11 @@ use crate::{
 };
 use abstract_core::ibc_client::CallbackInfo;
 use abstract_core::objects::ans_host::AnsHost;
-use abstract_core::objects::AnsAsset;
+
 use abstract_sdk::{features::AbstractNameService, Execution};
-use abstract_sdk::{IbcInterface, Resolve};
-use cosmwasm_std::{to_binary, Coin, Deps, DepsMut, Env, MessageInfo, Response, StdError};
+use abstract_sdk::{IbcInterface};
+use cosmwasm_std::{to_binary, Coin, Deps, DepsMut, Env, MessageInfo, Response};
+use cw_asset::AssetInfoBase;
 
 const ACTION_RETRIES: u8 = 3;
 
@@ -62,14 +64,14 @@ fn handle_ibc_request(
     deps: &DepsMut,
     info: MessageInfo,
     adapter: &LsdAdapter,
-    dex_name: LsdName,
+    lsd_name: LsdName,
     action: &LsdAction,
 ) -> LsdResult {
-    let host_chain = dex_name;
+    let host_chain = lsd_name;
     let ans = adapter.name_service(deps.as_ref());
     let ibc_client = adapter.ibc_client(deps.as_ref());
     // get the to-be-sent assets from the action
-    let coins = resolve_assets_to_transfer(deps.as_ref(), action, ans.host())?;
+    let coins = resolve_assets_to_transfer(deps.as_ref(), &lsd_name, action, ans.host())?;
     // construct the ics20 call(s)
     let ics20_transfer_msg = ibc_client.ics20_transfer(host_chain.clone(), coins)?;
     // construct the action to be called on the host
@@ -93,34 +95,27 @@ fn handle_ibc_request(
 
 pub(crate) fn resolve_assets_to_transfer(
     deps: Deps,
+    lsd_name: &String,
     dex_action: &LsdAction,
     ans_host: &AnsHost,
 ) -> LsdResult<Vec<Coin>> {
-    // resolve asset to native asset
-    let offer_to_coin = |offer: &AnsAsset| {
-        offer
-            .resolve(&deps.querier, ans_host)?
-            .try_into()
-            .map_err(LsdError::from)
-    };
-
     match dex_action {
-        LsdAction::ProvideLiquidity { assets, .. } => {
-            let coins: Result<Vec<Coin>, _> = assets.iter().map(offer_to_coin).collect();
-            coins
-        }
-        LsdAction::ProvideLiquiditySymmetric { .. } => Err(LsdError::Std(StdError::generic_err(
-            "Cross-chain symmetric provide liquidity not supported.",
-        ))),
-        LsdAction::WithdrawLiquidity { lp_token, amount } => Ok(vec![offer_to_coin(&AnsAsset {
-            name: lp_token.to_owned(),
-            amount: amount.to_owned(),
-        })?]),
-        LsdAction::Swap { offer_asset, .. } => Ok(vec![offer_to_coin(offer_asset)?]),
-        LsdAction::CustomSwap { offer_assets, .. } => {
-            let coins: Result<Vec<Coin>, _> = offer_assets.iter().map(offer_to_coin).collect();
-            coins
-        }
+        LsdAction::Bond { amount } => {
+            let lsd_query = resolve_lsd_query(lsd_name)?;
+            let underlying_token = lsd_query.underlying_token(deps)?;
+            match underlying_token.info{
+                AssetInfoBase::Native(denom) => Ok(vec![Coin { denom, amount: *amount }]),
+                _=> Ok(vec![])
+            }
+        },
+        LsdAction::Unbond { amount } => {
+            let lsd_query = resolve_lsd_query(lsd_name)?;
+            let underlying_token = lsd_query.lsd_token(deps)?;
+            match underlying_token.info{
+                AssetInfoBase::Native(denom) => Ok(vec![Coin { denom, amount: *amount }]),
+                _=> Ok(vec![])
+            }
+        },
+        LsdAction::Claim { } => Ok(vec![])
     }
-    .map_err(Into::into)
 }

@@ -1,3 +1,4 @@
+
 use crate::contract::{LsdAdapter, LsdResult};
 use crate::{msg::LsdInstantiateMsg};
 
@@ -10,8 +11,5 @@ pub fn instantiate_handler(
     adapter: LsdAdapter,
     msg: LsdInstantiateMsg,
 ) -> LsdResult {
-    let recipient = adapter
-        .account_registry(deps.as_ref())
-        .proxy_address(msg.recipient_account)?;
     Ok(Response::default())
 }

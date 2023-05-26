@@ -1,3 +1,4 @@
+use crate::msg::LsdInfo;
 use crate::error::LsdError;
 use crate::msg::{LsdAction};
 
@@ -6,6 +7,7 @@ use abstract_sdk::Execution;
 use cosmwasm_std::{CosmosMsg, Deps, Uint128};
 
 use super::command::LsdCommand;
+use super::query::LsdQuery;
 
 // TODO CHANGE AND FIND INDICES ?
 pub const BOND: u64 = 7542;

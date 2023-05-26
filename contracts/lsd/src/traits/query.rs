@@ -1,4 +1,5 @@
 
+use crate::error::LsdError;
 use cosmwasm_std::{Deps};
 use cw_asset::Asset;
 
@@ -10,8 +11,8 @@ use super::identity::Identify;
 /// Implements the usual LSD queries. These queries are mainly about what assets are used withing the LSD mechanism
 pub trait LsdQuery: Identify {
     /// The underlying asset that is staked and auto-compounded by the LSD
-    fn underlying_token(&self, deps: Deps) -> Result<Asset>;
+    fn underlying_token(&self, deps: Deps) -> Result<Asset, LsdError>;
 
     /// The LSD token that auto-compounds staked assets rewards
-    fn lsd_token(&self, deps: Deps) -> Result<Asset>;
+    fn lsd_token(&self, deps: Deps) -> Result<Asset, LsdError>;
 }

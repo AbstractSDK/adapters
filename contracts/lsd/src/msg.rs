@@ -2,11 +2,13 @@
 //!
 //! [`abstract_dex_adapter`] is a generic dex-interfacing contract that handles address retrievals and dex-interactions.
 
+use cw_asset::AssetBase;
+use cosmwasm_std::Addr;
 use abstract_core::{
     adapter,
 };
 use cosmwasm_schema::QueryResponses;
-use cosmwasm_std::{CosmosMsg, Decimal, Uint128};
+use cosmwasm_std::{CosmosMsg, Uint128};
 
 pub type LsdName = String;
 
@@ -59,10 +61,11 @@ pub enum LsdAction {
 #[cfg_attr(feature = "cw-orch", impl_into(QueryMsg))]
 pub enum LsdQueryMsg {
     /// Gets the underlying token of the LSD
-    #[returns(String)]
-    Query{
+    // TODO, hopefully our 2 messages have the same return type, this is not really possible if they don't have the same return type ?
+    #[returns(InfoResponse)]
+    Info{
         lsd: LsdName,
-        query: LsdQuery
+        query: LsdInfo
     },
     /// Endpoint can be used by front-end to easily interact with contracts.
     #[returns(GenerateMessagesResponse)]
@@ -71,11 +74,18 @@ pub enum LsdQueryMsg {
 
 /// Possible queries to perform on the LSD token (or hub)
 #[cosmwasm_schema::cw_serde]
-pub enum LsdQuery {
+pub enum LsdInfo {
     /// Bond your native tokens and get LSD tokens in return
     UnderlyingToken{},
     /// Unbond your LSD tokens and get native tokens in return when the burn period is over
     LSDToken{},
+}
+
+// Response from QueryMsg::Info
+#[cosmwasm_schema::cw_serde]
+pub enum InfoResponse{
+    UnderlyingToken(AssetBase<Addr>),
+    LSDToken(AssetBase<Addr>),
 }
 
 /// Response from GenerateMsgs

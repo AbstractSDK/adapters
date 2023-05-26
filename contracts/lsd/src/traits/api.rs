@@ -1,156 +1,131 @@
 // TODO: this should be moved to the public dex package
 // It cannot be in abstract-os because it does not have a dependency on sdk (as it shouldn't)
+use cw_asset::AssetBase;
+use cosmwasm_std::Addr;
 use crate::{
     msg::{
-        AskAsset, DexAction, DexExecuteMsg, DexName, DexQueryMsg, OfferAsset, SimulateSwapResponse,
-        SwapRouter,
+        LsdAction, LsdExecuteMsg, LsdQueryMsg, LsdName, LsdInfo, InfoResponse,
     },
-    EXCHANGE,
+    LSD,
 };
-use abstract_core::objects::{module::ModuleId, AssetEntry};
-use abstract_sdk::AdapterInterface;
+use abstract_core::objects::{module::ModuleId};
+use abstract_sdk::{AdapterInterface, AbstractSdkError};
 use abstract_sdk::{
     features::{AccountIdentification, Dependencies},
     AbstractSdkResult,
 };
-use cosmwasm_std::{CosmosMsg, Decimal, Deps, Uint128};
+use cosmwasm_std::{CosmosMsg, Deps, Uint128};
 use serde::de::DeserializeOwned;
 
 // API for Abstract SDK users
 /// Interact with the dex adapter in your module.
-pub trait DexInterface: AccountIdentification + Dependencies {
+pub trait LsdInterface: AccountIdentification + Dependencies {
     /// Construct a new dex interface
-    fn dex<'a>(&'a self, deps: Deps<'a>, name: DexName) -> Dex<Self> {
-        Dex {
+    fn dex<'a>(&'a self, deps: Deps<'a>, name: LsdName) -> Lsd<Self> {
+        Lsd {
             base: self,
             deps,
             name,
-            module_id: EXCHANGE,
+            module_id: LSD,
         }
     }
 }
 
-impl<T: AccountIdentification + Dependencies> DexInterface for T {}
+impl<T: AccountIdentification + Dependencies> LsdInterface for T {}
 
 #[derive(Clone)]
-pub struct Dex<'a, T: DexInterface> {
+pub struct Lsd<'a, T: LsdInterface> {
     base: &'a T,
-    name: DexName,
+    name: LsdName,
     module_id: ModuleId<'a>,
     deps: Deps<'a>,
 }
 
-impl<'a, T: DexInterface> Dex<'a, T> {
-    /// Set the module id for the DEX
+impl<'a, T: LsdInterface> Lsd<'a, T> {
+    /// Set the module id for the LSD
     pub fn with_module_id(self, module_id: ModuleId<'a>) -> Self {
         Self { module_id, ..self }
     }
 
     /// returns DEX name
-    fn dex_name(&self) -> DexName {
+    fn lsd_name(&self) -> LsdName {
         self.name.clone()
     }
 
     /// returns the DEX module id
-    fn dex_module_id(&self) -> ModuleId {
+    fn lsd_module_id(&self) -> ModuleId {
         self.module_id
     }
 
-    /// Executes a [DexAction] in th DEX
-    fn request(&self, action: DexAction) -> AbstractSdkResult<CosmosMsg> {
+    /// Executes a [LSDAction] in the LSD
+    fn request(&self, action: LsdAction) -> AbstractSdkResult<CosmosMsg> {
         let adapters = self.base.adapters(self.deps);
 
         adapters.request(
-            self.dex_module_id(),
-            DexExecuteMsg::Action {
-                dex: self.dex_name(),
+            self.lsd_module_id(),
+            LsdExecuteMsg::Action {
+                lsd: self.lsd_name(),
                 action,
             },
         )
     }
 
-    /// Swap assets in the DEX
-    pub fn swap(
+    /// Bond assets in the LSD
+    pub fn bond(
         &self,
-        offer_asset: OfferAsset,
-        ask_asset: AssetEntry,
-        max_spread: Option<Decimal>,
-        belief_price: Option<Decimal>,
-    ) -> AbstractSdkResult<CosmosMsg> {
-        self.request(DexAction::Swap {
-            offer_asset,
-            ask_asset,
-            belief_price,
-            max_spread,
-        })
-    }
-
-    /// Execute a custom swap in the DEX
-    pub fn custom_swap(
-        &self,
-        offer_assets: Vec<OfferAsset>,
-        ask_assets: Vec<AskAsset>,
-        max_spread: Option<Decimal>,
-        router: Option<SwapRouter>,
-    ) -> AbstractSdkResult<CosmosMsg> {
-        self.request(DexAction::CustomSwap {
-            offer_assets,
-            ask_assets,
-            max_spread,
-            router,
-        })
-    }
-
-    /// Provide liquidity in the DEX
-    pub fn provide_liquidity(
-        &self,
-        assets: Vec<OfferAsset>,
-        max_spread: Option<Decimal>,
-    ) -> AbstractSdkResult<CosmosMsg> {
-        self.request(DexAction::ProvideLiquidity { assets, max_spread })
-    }
-
-    /// Provide symmetrict liquidity in the DEX
-    pub fn provide_liquidity_symmetric(
-        &self,
-        offer_asset: OfferAsset,
-        paired_assets: Vec<AssetEntry>,
-    ) -> AbstractSdkResult<CosmosMsg> {
-        self.request(DexAction::ProvideLiquiditySymmetric {
-            offer_asset,
-            paired_assets,
-        })
-    }
-
-    /// Withdraw liquidity from the DEX
-    pub fn withdraw_liquidity(
-        &self,
-        lp_token: AssetEntry,
         amount: Uint128,
     ) -> AbstractSdkResult<CosmosMsg> {
-        self.request(DexAction::WithdrawLiquidity { lp_token, amount })
+        self.request(LsdAction::Bond {
+            amount
+        })
+    }
+
+    /// Unbond assets from the LSD
+    pub fn unbond(
+        &self,
+        amount: Uint128,
+    ) -> AbstractSdkResult<CosmosMsg> {
+        self.request(LsdAction::Unbond {
+            amount
+        })
+    }
+
+
+    /// Claim the unbounded tokens
+    pub fn claim(
+        &self,
+    ) -> AbstractSdkResult<CosmosMsg> {
+        self.request(LsdAction::Claim {  })
     }
 }
 
-impl<'a, T: DexInterface> Dex<'a, T> {
-    /// Do a query in the DEX
-    fn query<R: DeserializeOwned>(&self, query_msg: DexQueryMsg) -> AbstractSdkResult<R> {
+impl<'a, T: LsdInterface> Lsd<'a, T> {
+    /// Do a query in the LSD
+    fn query<R: DeserializeOwned>(&self, query_msg: LsdQueryMsg) -> AbstractSdkResult<R> {
         let adapters = self.base.adapters(self.deps);
-        adapters.query(EXCHANGE, query_msg)
+        adapters.query(LSD, query_msg)
     }
 
-    /// simulate DEx swap
-    pub fn simulate_swap(
-        &self,
-        offer_asset: OfferAsset,
-        ask_asset: AssetEntry,
-    ) -> AbstractSdkResult<SimulateSwapResponse> {
-        let response: SimulateSwapResponse = self.query(DexQueryMsg::SimulateSwap {
-            dex: Some(self.dex_name()),
-            offer_asset,
-            ask_asset,
-        })?;
-        Ok(response)
+    /// Do a query in the LSD query adapter
+    fn lsd_query(&self, query_msg: LsdInfo) -> AbstractSdkResult<InfoResponse> {
+        let query_result: InfoResponse = self.query(LsdQueryMsg::Info { lsd: self.lsd_module_id().to_owned(), query: query_msg })?;
+        Ok(query_result)
+    }
+
+    pub fn underlying_token(&self) -> AbstractSdkResult<AssetBase<Addr>>{
+        let response = self.lsd_query(LsdInfo::UnderlyingToken {  })?;
+        match response{
+            InfoResponse::UnderlyingToken(i) => Ok(i),
+            _ => Err(AbstractSdkError::generic_err("Couldn't unwrap query result"))
+        }
+    }
+
+    pub fn lsd_token(&self) -> AbstractSdkResult<AssetBase<Addr>>{
+        let response = self.lsd_query(LsdInfo::LSDToken {  })?; 
+        match response{
+            InfoResponse::LSDToken(i) => Ok(i),
+            _ => Err(AbstractSdkError::generic_err("Couldn't unwrap query result"))
+        }
     }
 }
 
