@@ -1,5 +1,5 @@
 [package]
-name = "abstract-dex-adapter"
+name = "abstract-lsd-adapter"
 version = { workspace = true }
 authors = { workspace = true }
 edition = { workspace = true }
@@ -15,7 +15,7 @@ name = "deploy"
 required-features = ["cw-orch"]
 
 [features]
-default = ["export"]
+default = ["export", "cw-orch"]
 export = []
 cw-orch = ["dep:abstract-interface", "dep:cw-orch"]
 juno = ["dep:wasmswap", "dep:cw20_junoswap", "dep:wyndex"]
@@ -53,6 +53,7 @@ astroport = { git = "https://github.com/astroport-fi/astroport-core.git", rev = 
 
 # Osmosis #
 osmosis-std = { version = "0.13.2", optional = true }
+eris = "0.0.1"
 
 [dev-dependencies]
 abstract-interface = { workspace = true, features = ["daemon"] }
@@ -66,7 +67,7 @@ clap = { workspace = true }
 wyndex-bundle = { workspace = true }
 abstract-testing = { workspace = true }
 abstract-sdk = { workspace = true, features = ["test-utils"] }
-dex = { path = ".", features = [
+lsd = { path = ".", features = [
   "cw-orch",
   "juno",
-], package = "abstract-dex-adapter" }
+], package = "abstract-lsd-adapter" }
