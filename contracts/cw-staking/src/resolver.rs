@@ -10,7 +10,7 @@ use abstract_staking_adapter_traits::Identify;
 
 use abstract_astroport_adapter::{staking::Astroport, ASTROPORT};
 use abstract_osmosis_adapter::{staking::Osmosis, OSMOSIS};
-use abstract_wyndex_adapter::staking::{WynDex, WYNDEX};
+use abstract_wyndex_adapter::{staking::WynDex,WYNDEX};
 
 pub(crate) fn identify_provider(value: &str) -> Result<Box<dyn Identify>, CwStakingError> {
     match value {

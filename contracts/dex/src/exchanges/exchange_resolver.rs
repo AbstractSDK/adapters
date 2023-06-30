@@ -8,7 +8,7 @@ use crate::exchanges::junoswap::{JunoSwap, JUNOSWAP};
 use crate::exchanges::terraswap::{Terraswap, TERRASWAP};
 use abstract_astroport_adapter::{dex::Astroport, ASTROPORT};
 use abstract_osmosis_adapter::{dex::Osmosis, OSMOSIS};
-use abstract_wyndex_adapter::dex::{WynDex, WYNDEX};
+use abstract_wyndex_adapter::{dex::WynDex, WYNDEX};
 
 pub(crate) fn identify_exchange(value: &str) -> Result<Box<dyn Identify>, DexError> {
     match value {
